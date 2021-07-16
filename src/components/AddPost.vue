@@ -15,7 +15,7 @@
 
 <script>
 
-    import { db } from '../firebase.js';  //update to better path
+    import { db } from '../firebase.js';
 
     export default {
         name: "AddPost",
