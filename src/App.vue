@@ -58,10 +58,13 @@ export default {
 
   *{
     list-style: none;
+    cursor: default;
   }
 
   body{
-    background: rgb(46, 62, 80);
+    /* background: rgb(46, 62, 80); */
+        /* background: #3d405b; */
+      background: #2f3e46;
   }
 
 /* #app {

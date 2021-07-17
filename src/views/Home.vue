@@ -1,101 +1,43 @@
 <template>
-  <div id="home">
-    <!-- <Header /> -->
-    <PostSection :posts="postsData" v-on:updatePost='updatePosts' />
-    <AddPost v-on:updatePost='updatePosts' :user='user'/>
-  </div>
+    <div>
+        <h1>Home</h1>
+
+        <router-link v-if="user === ''" to="/login" class="loginLink">Login</router-link>
+        <h2 v-else> You Are Logged In </h2>
+    </div>
 </template>
 
 <script>
-import PostSection from '../components/PostSection.vue';
-import AddPost from '../components/AddPost.vue'
+    export default {
+        name: 'home',
 
-import { db } from '../firebase'; 
-
-// const documentPath = 'posts/giA7TxfrlsdtXVphCNtb';
-
-export default {
-  name: 'Home',
-  components: {
-    // Header,
-    PostSection,
-    AddPost
-  },
-
-  props: {
-    user: String,
-  },
-
-  data() {
-    return {
-      // firebaseData: null,
-      postsData: [],
-    };
-  },
-
-  created() {
-     db.collection('posts').get().then(querySnapshot => {
-       querySnapshot.forEach(doc => {
-         const data = {
-            'id': doc.id,
-            'username': doc.data().Username,
-            'title': doc.data().Title,
-            'postText': doc.data().PostText
-         }
-
-         this.postsData.push(data);
-       })
-     })
-  },
-
-  methods: {
-    updatePosts() { //sometimes called too early*
-      db.collection('posts').get().then(querySnapshot => {
-          this.postsData = [];
-          querySnapshot.forEach(doc => {
-              const data = {
-                  'id': doc.id,
-                  'username': doc.data().Username,
-                  'title': doc.data().Title,
-                  'postText': doc.data().PostText
-              }
-
-              this.postsData.push(data);
-
-              // console.log(this.postsData[0].username);
-          })
-          // .then(() => { //not tested but may call from server too many times and does not account for inital render;
-          //   if(oldPostsData === this.postsData){
-          //     setTimeout(() => {
-          //       this.updatePosts();
-          //     }, 1000);
-          //   }
-          // })
-      })
-      .catch((error) => {
-        console.log("Update-Error: " + error);
-      })
+        props: {
+            user: String
+        }
     }
-  }
-}
 </script>
 
-<style>
+<style scoped>
 
-  *{
-    list-style: none;
-  }
+    h1 {
+        margin-top: 5vw;
+        text-align: center;
+        color: white;
+    }
 
-  body{
-    background: rgb(46, 62, 80);
-  }
+    h2 {
+        color: white;
+        text-align: center;
+    }
 
-/* #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-} */
+    .loginLink {
+        color: white;
+        font-size: 1.6vw;
+        width: 8vw;
+        height: 1.4vw;
+        display: block;
+        margin: 5vw auto 0 auto;
+        text-align: center;
+    }
+
 </style>

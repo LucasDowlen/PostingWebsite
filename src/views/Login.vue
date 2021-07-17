@@ -1,7 +1,6 @@
 <template>
   <div>
-
-    <h1>Create Account</h1>
+    <h1 class="topHeader">Create Account</h1>
 
     <form>
         <input v-model="createAccount.email" value="createAccount.email" placeholder="Email" onkeypress="return event.keyCode != 13;"/>
@@ -75,7 +74,7 @@
         var newEmail = this.loginToAccount.email.toString();
         var newPass = this.loginToAccount.password.toString();
 
-        console.log("NewLogin: " + newEmail + "p: " + newPass);
+        console.log("NewLogin: " + newEmail + " pass: " + newPass);
         firebase.auth().signInWithEmailAndPassword(newEmail, newPass)
           .then((user) => {
             console.log("successful login:" + user);
@@ -94,6 +93,10 @@
 </script>
 
 <style scoped>
+
+  .topHeader{
+    margin-top: 5vw;
+  }
 
   h1{
     text-align: center;

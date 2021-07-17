@@ -2,9 +2,9 @@
   <div>
     <h1>Posts:</h1>
 
-    <ul v-for="data in posts" v-bind:key="data.id">
+    <div v-for="data in posts" v-bind:key="data.id">
       <IndividualPost :postData='data' v-on:updatePost='sendUpdatePostEmit'/>
-    </ul>
+    </div>
 
   </div>
 </template>
