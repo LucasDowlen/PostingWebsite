@@ -2,7 +2,7 @@
   <div id="home">
     <!-- <Header /> -->
     <PostSection :posts="postsData" v-on:updatePost='updatePosts' />
-    <AddPost v-on:updatePost='updatePosts'/>
+    <AddPost v-on:updatePost='updatePosts' :user='user'/>
   </div>
 </template>
 
@@ -20,6 +20,10 @@ export default {
     // Header,
     PostSection,
     AddPost
+  },
+
+  props: {
+    user: String,
   },
 
   data() {
@@ -45,8 +49,7 @@ export default {
   },
 
   methods: {
-    updatePosts() { //somereaseon keys are getting duplicated (probably fixed) //maybe called to early sometimes
-      // var oldPostsData = this.postsData;
+    updatePosts() { //sometimes called too early*
       db.collection('posts').get().then(querySnapshot => {
           this.postsData = [];
           querySnapshot.forEach(doc => {

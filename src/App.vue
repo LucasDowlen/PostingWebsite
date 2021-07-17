@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <Header/>
-    <router-view />
+    <Header :user='username'/>
+    <router-view v-on:userUpdated="updateUser" :user='username'/>
   </div>
 </template>
 
@@ -24,12 +24,11 @@ export default {
   //   AddPost
   // },
 
-  // data() {
-  //   return {
-  //     // firebaseData: null,
-  //     postsData: [],
-  //   };
-  // },
+  data() {
+    return {
+      username: ''
+    };
+  },
 
   // created() {
   //    db.collection('posts').get().then(querySnapshot => {
@@ -46,36 +45,12 @@ export default {
   //    })
   // },
 
-  // methods: {
-  //   updatePosts: function() { //somereaseon keys are getting duplicated (probably fixed) //maybe called to early sometimes
-  //     // var oldPostsData = this.postsData;
-  //     db.collection('posts').get().then(querySnapshot => {
-  //         this.postsData = [];
-  //         querySnapshot.forEach(doc => {
-  //             const data = {
-  //                 'id': doc.id,
-  //                 'username': doc.data().Username,
-  //                 'title': doc.data().Title,
-  //                 'postText': doc.data().PostText
-  //             }
-
-  //             this.postsData.push(data);
-
-  //             // console.log(this.postsData[0].username);
-  //         })
-  //         // .then(() => { //not tested but may call from server too many times and does not account for inital render;
-  //         //   if(oldPostsData === this.postsData){
-  //         //     setTimeout(() => {
-  //         //       this.updatePosts();
-  //         //     }, 1000);
-  //         //   }
-  //         // })
-  //     })
-  //     .catch((error) => {
-  //       console.log("Update-Error: " + error);
-  //     })
-  //   }
-  // }
+  methods: {
+    updateUser(updatedUsername) {
+      console.log("updatingUser");
+      this.username = updatedUsername;
+    }
+  }
 }
 </script>
 

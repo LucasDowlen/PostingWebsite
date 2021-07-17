@@ -19,12 +19,13 @@
         },
 
         methods: {
-            deletePost: function() {
+            deletePost() {
 
-                db.collection('posts').doc(this.postData.id).delete().then(
-                    this.$emit('updatePost',
-                    console.log("update/?")
-                ));
+                db.collection('posts').doc(this.postData.id).delete().then(() => {
+                    setTimeout(() => {
+                        this.$emit('updatePost');
+                    }, 10);
+                });
 
                 // this.$emit('updatePost');
             }
@@ -40,7 +41,9 @@ div {
 }
 
 div li {
-    text-align: center;
+    margin: 0 auto;
+    width: 22vw;
+    /* text-align: center; */
     color: white;
 
     white-space: pre-wrap;
