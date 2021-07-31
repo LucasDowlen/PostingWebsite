@@ -2,7 +2,7 @@
 node_modules
 /dist
 
-./firebase.js
+/firebase.js
 
 
 # local env files
