@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <Header :user='username'/>
-    <router-view v-on:userUpdated="updateUser" :user='username'/>
+    <Header :user='user'/>
+    <router-view v-on:userUpdated="updateUser" :user='user'/>
   </div>
 </template>
 
@@ -26,7 +26,7 @@ export default {
 
   data() {
     return {
-      username: ''
+      user: ''
     };
   },
 
@@ -47,8 +47,8 @@ export default {
 
   methods: {
     updateUser(updatedUsername) {
-      console.log("updatingUser");
-      this.username = updatedUsername;
+      console.log(`Updating User..(${updatedUsername})`);
+      this.user = updatedUsername;
     }
   }
 }

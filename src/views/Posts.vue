@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- <Header /> -->
-    <PostSection :posts="postsData" v-on:updatePost='updatePosts' />
+    <PostSection :posts="postsData" :user='user' v-on:updatePost='updatePosts' />
     <AddPost v-on:updatePost='updatePosts' :user='user'/>
   </div>
 </template>

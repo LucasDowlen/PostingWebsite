@@ -50,8 +50,7 @@
         var newEmail = this.createAccount.email.toString();
         var newPass = this.createAccount.password.toString();
 
-        firebase.auth().createUserWithEmailAndPassword(newEmail, newPass).then((user) => {
-          console.log(user);
+        firebase.auth().createUserWithEmailAndPassword(newEmail, newPass).then(() => {
           console.log("Success! New Account Made");
         })
         .catch((error) => {
@@ -76,13 +75,12 @@
 
         console.log("NewLogin: " + newEmail + " pass: " + newPass);
         firebase.auth().signInWithEmailAndPassword(newEmail, newPass)
-          .then((user) => {
-            console.log("successful login:" + user);
+          .then(() => {
+            console.log("successful login");
             this.$emit('userUpdated', newEmail);
           })
           .catch((error) => {
             console.log(error);
-            console.log("error");
           });
 
         this.loginToAccount.email = '';

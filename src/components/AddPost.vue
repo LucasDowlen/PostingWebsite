@@ -6,7 +6,7 @@
             <!-- <input v-model="data.Author" placeholder="Username" onkeypress="return event.keyCode != 13;"/> -->
             <textarea v-model="data.PostText" placeholder="Post Text" type="textarea" @input="resizeTextbox($event)"/>
 
-            <button v-on:click.prevent='callUpdateFunction'/>
+            <button v-on:click.prevent='callUpdateFunction'> Submit </button>
         </form>
 
         <!-- <h3> {{ data.test }} + test?</h3> -->
@@ -89,7 +89,8 @@ form{
 
 input, textarea{
     margin: 0.2vw auto;
-    width: 20vw;
+    width: 60vw;
+    font-size: 1.6em;
 }
 
 textarea{

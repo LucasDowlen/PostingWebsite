@@ -3,7 +3,7 @@
     <h1>Posts:</h1>
 
     <div v-for="data in posts" v-bind:key="data.id">
-      <IndividualPost :postData='data' v-on:updatePost='sendUpdatePostEmit'/>
+      <IndividualPost :postData='data' :user='user' v-on:updatePost='sendUpdatePostEmit'/>
     </div>
 
   </div>
@@ -20,12 +20,12 @@
     },
 
     props: {
-        posts: Array
+        posts: Array,
+        user: String
     },
 
     methods: {
-      sendUpdatePostEmit: function() {
-        console.log("u-Up");
+      sendUpdatePostEmit() {
         this.$emit('updatePost');
       }
     }
