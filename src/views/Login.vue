@@ -26,11 +26,10 @@
   import firebase from 'firebase';
 
   export default {
-    name: 'login',
+    // name: 'login',
 
     data() {
       return{
-
         createAccount: {
           email: '',
           password: ''
@@ -50,13 +49,14 @@
         var newEmail = this.createAccount.email.toString();
         var newPass = this.createAccount.password.toString();
 
-        firebase.auth().createUserWithEmailAndPassword(newEmail, newPass).then(() => {
-          console.log("Success! New Account Made");
-        })
-        .catch((error) => {
-          console.log(error);
-          console.log("error");
-        }); //not working
+        firebase.auth().createUserWithEmailAndPassword(newEmail, newPass)
+          .then(() => {
+            console.log("Success! New Account Made");
+          })
+          .catch((error) => {
+            console.log(error);
+            console.log("error");
+          }); //not working
 
         // db.collection("accounts").add({     
         //     username: this.createAccount.username,

@@ -2,8 +2,8 @@
     <div>
         <ul>
             <router-link to="/" class="routerLink"> Home </router-link>
-            <router-link to="/" class="routerLink" > Subreddits </router-link>
-            <router-link to="/posts" class="routerLink" > Post </router-link>
+            <router-link to="/posts" class="routerLink" > Subreddits </router-link>
+            <router-link to="/create-post" class="routerLink" > Post </router-link>
             <router-link to="/login" class="routerLink" v-if="user === ''"> Login </router-link>
             <router-link to="/login" class="routerLink" v-else> {{ user }} </router-link>
             <!-- <li>Home</li>

@@ -1,14 +1,17 @@
 <template>
-    <div>
+    <section>
         <span v-on:click='deletePost'>X</span>
-        <ul>
-            <!-- <li class="id"> {{ postData.id }} </li> -->
-            <li class="title"> {{ postData.title }} </li>
-            <li class="username"> Posted By: {{ postData.username }} - {{ postData.id }} </li>
-            <br />
-            <li class="postText"> {{ postData.postText }} </li>
-        </ul>
-    </div>
+
+        <router-link :to="'/posts/' + this.postData.id" class="routerLink">
+            <ul>
+                <!-- <li class="id"> {{ postData.id }} </li> -->
+                <li class="title"> {{ postData.title }} </li>
+                <li class="username"> Posted By: {{ postData.username }} - {{ postData.id }} </li>
+                <br />
+                <li class="postText"> {{ postData.postText }} </li>
+            </ul>
+        </router-link>
+    </section>
 </template>
 
 <script>
@@ -29,7 +32,7 @@
                     if(doc.data().Username === this.user) {
                         console.log("same")
 
-                        db.collection('posts').doc(this.postData.id).delete().then(() => {
+                        db.collection('posts').doc(this.postData.id).delete().then(() => { //possible remove delay or make it wait for required variable
                             setTimeout(() => {
                             this.$emit('updatePost');
                             }, 10);
@@ -37,7 +40,7 @@
                     }
 
                     else {
-                        console.log(`User does not own this post`);
+                        console.log('User does not own this post');
                     }
                 })
             }
@@ -49,20 +52,25 @@
 
     @import url('https://fonts.googleapis.com/css2?family=Open+Sans&family=Roboto&display=swap');
 
-    div {
+    .routerLink {
+        text-decoration: none;
+    }
+
+    section {
         width: 95vw;
-        margin: 2vw auto;
-        padding: 2vw 0;
+        margin: 2em auto;
+        padding: 0.6vw 0;
         /* background: #81b29a; */
         /* background: #81b29a; */
         background: #52796f;
         border-radius: 0.3vw;
     }
 
-    div ul li {
+    ul li {
         margin: 0 auto;
         width: 80vw;
-        font-size: 3.4vw;
+        /* font-size: 3.4vw; */
+        font-size: 1.05em;
         /* text-align: center; */
         color: white;
 
@@ -77,7 +85,8 @@
 
     .title {
         width: 80vw;
-        font-size: 5vw;
+        /* font-size: 5vw; */
+        font-size: 1.8em;
         margin-bottom: 0.2vw;
 
         white-space: nowrap;
@@ -87,39 +96,44 @@
     }
 
     .username {
-        margin-bottom: 1.8vw;
         font-family: 'Open Sans', sans-serif;
+        font-size: 1.15em;
     }
 
     .postText {
+        margin-top: 1em;
         font-family: 'Open Sans', sans-serif;
     }
 
     span{
-        margin: -0.4vw 0 0 86.6vw;
-        font-size: 4vw;
+        margin: 0.2vw 0 0 90vw;
+        font-size: 1.4em;
         position: absolute;
         color: white;
     }
 
-    @media screen and (min-width: 1000px) {
-        div {
-            width: 90vw;
+    @media screen and (min-width: 800px) {
+        section {
+            width: 70vw;
         }
 
-        div ul li {
-            font-size: 1.2vw;
+        ul li {
+            width: 65vw;
         }
+
+        /* div ul li {
+            font-size: 1.2vw;
+        } */
 
         .title {
-            font-size: 1.8vw;
-            /* margin-bottom: 0.2vw; */
+            /* font-size: 1.8vw; */
+            width: 65vw;
+            margin-bottom: 0.2vw;
         }
 
         span{
-            /* margin: -0.4vw 0 0 86.6vw; */
-            font-size: 1.4vw;
-        }
+            margin: -0.2vw 0 0 68vw;
+            /* font-size: 1.4vw; */
+        } 
     }
-
 </style>

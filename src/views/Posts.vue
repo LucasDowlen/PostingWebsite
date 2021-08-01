@@ -2,13 +2,13 @@
   <div>
     <!-- <Header /> -->
     <PostSection :posts="postsData" :user='user' v-on:updatePost='updatePosts' />
-    <AddPost v-on:updatePost='updatePosts' :user='user'/>
+    <!-- <AddPost v-on:updatePost='updatePosts' :user='user'/> -->
   </div>
 </template>
 
 <script>
 import PostSection from '../components/PostSection.vue';
-import AddPost from '../components/AddPost.vue'
+// import AddPost from '../components/AddPost.vue'
 
 import { db } from '../firebase'; 
 
@@ -19,7 +19,6 @@ export default {
   components: {
     // Header,
     PostSection,
-    AddPost
   },
 
   props: {

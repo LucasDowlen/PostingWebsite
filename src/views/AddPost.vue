@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <section>
         <form>
             <!-- //somereaseon keys are getting duplicated -->
             <input v-model="data.Title" placeholder="Title" onkeypress="return event.keyCode != 13;"/>
@@ -10,12 +10,14 @@
         </form>
 
         <!-- <h3> {{ data.test }} + test?</h3> -->
-    </div>
+    </section>
 </template>
 
 <script>
 
-    import { db } from '../firebase.js';
+    import { db } from '../firebase.js'
+
+    // import router from 'vue-router'
 
     export default {
         name: "AddPost",
@@ -50,7 +52,11 @@
                     PostText: this.data.PostText
                 })
                 .then(() => {
-                    this.$emit('updatePost');
+                    // this.$emit('updatePost');
+
+                    //this.pushHistory
+
+                    this.$router.push({ path: '/posts' })
                 });
 
                 this.data.Title = "";
@@ -81,6 +87,10 @@
 </script>
 
 <style scoped>
+
+section{
+    margin-top: 10vw;
+}
 
 form{
     display: flex;
