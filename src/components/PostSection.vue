@@ -14,14 +14,14 @@
   import IndividualPost from './IndividualPost.vue';
 
   export default {
-    name: 'PostSection',
-      components: {
-        IndividualPost
-    },
 
     props: {
-        posts: Array,
-        user: String
+      posts: Array,
+      user: String
+    },
+    
+    components: {
+      IndividualPost
     },
 
     methods: {

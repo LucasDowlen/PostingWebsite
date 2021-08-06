@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <Header :user='user'/>
-    <router-view v-on:userUpdated="updateUser" :user='user'/>
+    <Header :user='user' v-on:userUpdated="updateUser"/>
+    <router-view :user='user'/>
   </div>
 </template>
 
@@ -47,6 +47,7 @@ export default {
 
   methods: {
     updateUser(updatedUsername) {
+      // console.log(updatedUsername);
       console.log(`Updating User..(${updatedUsername})`);
       this.user = updatedUsername;
     }
@@ -55,6 +56,8 @@ export default {
 </script>
 
 <style>
+
+  @import url('https://fonts.googleapis.com/css2?family=Open+Sans&family=Roboto&display=swap');
 
   *{
     list-style: none;

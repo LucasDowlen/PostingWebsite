@@ -1,13 +1,13 @@
 <template>
   <div>
-    <h1 class="topHeader">Create Account</h1>
+    <!-- <h1 class="topHeader">Create Account</h1>
 
     <form>
         <input v-model="createAccount.email" value="createAccount.email" placeholder="Email" onkeypress="return event.keyCode != 13;"/>
         <input v-model="createAccount.password" value="loginToAccount.password" placeholder="Password" onkeypress="return event.keyCode != 13;"/>
         
         <button v-on:click.prevent="createNewAccount" />
-    </form>
+    </form> -->
 
     <h1>Login Account</h1>
 
@@ -15,12 +15,14 @@
         <input v-model="loginToAccount.email" value="loginToAccount.email" placeholder="Email" onkeypress="return event.keyCode != 13;"/>
         <input v-model="loginToAccount.password" value="loginToAccount.password" placeholder="Password" onkeypress="return event.keyCode != 13;"/>
 
-        <button v-on:click.prevent="loginAccount" />
+        <button v-on:click.prevent="loginAccount"> Login </button>
     </form>
   </div>
 </template>
 
 <script>
+
+  //emit to correct location
 
   // import { db } from '../firebase.js';
   import firebase from 'firebase';
@@ -30,10 +32,6 @@
 
     data() {
       return{
-        createAccount: {
-          email: '',
-          password: ''
-        },
         loginToAccount: {
           email: '',
           password: '',
@@ -42,31 +40,31 @@
     },
 
     methods: {
-      createNewAccount() {
+      // createNewAccount() {
 
-        console.log("User: " + this.createAccount.email + " Pass: " + this.createAccount.password);
+      //   console.log("User: " + this.createAccount.email + " Pass: " + this.createAccount.password);
 
-        var newEmail = this.createAccount.email.toString();
-        var newPass = this.createAccount.password.toString();
+      //   var newEmail = this.createAccount.email.toString();
+      //   var newPass = this.createAccount.password.toString();
 
-        firebase.auth().createUserWithEmailAndPassword(newEmail, newPass)
-          .then(() => {
-            console.log("Success! New Account Made");
-          })
-          .catch((error) => {
-            console.log(error);
-            console.log("error");
-          }); //not working
+      //   firebase.auth().createUserWithEmailAndPassword(newEmail, newPass)
+      //     .then(() => {
+      //       console.log("Success! New Account Made");
+      //     })
+      //     .catch((error) => {
+      //       console.log(error);
+      //       console.log("error");
+      //     }); //not working
 
-        // db.collection("accounts").add({     
-        //     username: this.createAccount.username,
-        //     password: this.createAccount.password,
-        //     // PostText: this.data.PostText
-        //   })
+      //   // db.collection("accounts").add({     
+      //   //     username: this.createAccount.username,
+      //   //     password: this.createAccount.password,
+      //   //     // PostText: this.data.PostText
+      //   //   })
 
-        this.createAccount.email = '';
-        this.createAccount.password = '';
-      },
+      //   this.createAccount.email = '';
+      //   this.createAccount.password = '';
+      // },
 
       loginAccount() {
 
@@ -77,7 +75,7 @@
         firebase.auth().signInWithEmailAndPassword(newEmail, newPass)
           .then(() => {
             console.log("successful login");
-            this.$emit('userUpdated', newEmail);
+            this.$parent.$emit('userUpdated', newEmail);
           })
           .catch((error) => {
             console.log(error);
@@ -92,8 +90,21 @@
 
 <style scoped>
 
-  .topHeader{
-    margin-top: 5vw;
+  * {
+    background: rgb(61, 64, 91);
+  }
+
+  div {
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    
+    height: 40vh;
+    width: 60vw;
+    position: absolute;
+    z-index: 1;
   }
 
   h1{
@@ -110,10 +121,11 @@
   input, button{
     margin: 0.2vw auto;
     width: 20vw;
+    color: white;
   }
 
   button{
-    height: 1vw;
+    height: 2vw;
   }
 
 </style>

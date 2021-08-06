@@ -2,7 +2,7 @@
     <div>
         <h1>Home</h1>
 
-        <router-link v-if="user === ''" to="/login" class="loginLink">Login</router-link>
+        <router-link v-if="user === ''" to="/" class="loginLink">Login</router-link>
         <h2 v-else> You Are Logged In </h2>
     </div>
 </template>

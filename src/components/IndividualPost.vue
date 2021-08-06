@@ -50,8 +50,6 @@
 
 <style scoped>
 
-    @import url('https://fonts.googleapis.com/css2?family=Open+Sans&family=Roboto&display=swap');
-
     .routerLink {
         text-decoration: none;
     }

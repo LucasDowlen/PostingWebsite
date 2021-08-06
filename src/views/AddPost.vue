@@ -65,21 +65,8 @@
             },
 
             resizeTextbox(e) {
-
                 e.target.style.height = 'auto';
                 e.target.style.height = `${e.target.scrollHeight}px`
-
-                // this.data.PostText = e.target.value;
-
-                // console.log(this.data.PostText);
-
-                // this.data.test = this.data.PostText;
-                // this.data.test = this.data.PostText;
-
-                // console.log(this.data.test + "datavmodel");
-
-                // this.data.test = this.data.PostText.replace(/(?:\r\n|\r|\n)/g, '<br>');
-
             }
         }
     }
