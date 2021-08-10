@@ -1,6 +1,5 @@
 <template>
     <div>
-
         <textarea v-show="editing" v-model="editPostTitle" class="editTitle" />
 
         <h1 v-if="!editing"> {{ this.postTitle }} </h1>
@@ -15,6 +14,13 @@
             <button @click="editing = false" class="cancel" v-if="editing"> Cancel </button>
             <button @click="updatePost(false)" v-if="editing"> Submit Changes </button>
         </div>
+        
+        <div class="commentInputSection">
+            <textarea type="textarea" placeholder="comment" @input="resizeTextbox($event)"/>
+
+            <button @click="this.addComment"> Submit </button>
+        </div>
+
     </div>
 </template>
 
@@ -44,11 +50,7 @@
         },
 
         mounted() {
-            console.log(this.$route.params.id);
-
-            this.id = this.$route.params.id;
-
-            db.collection("posts").doc(this.id).get().then((doc) => {
+            db.collection("posts").doc(this.$route.params.id).get().then((doc) => {
                 this.postAuthor = doc.data().Username;
                 this.postTitle = this.editPostTitle = doc.data().Title;
                 this.postText = this.editPostText = doc.data().PostText;
@@ -64,7 +66,6 @@
             resizeTextbox(e) {
                 e.target.style.height = 'auto';
                 e.target.style.height = `${e.target.scrollHeight}px`
-                console.log(this.$refs);
             },
 
             updatePost(editing) {
@@ -84,7 +85,7 @@
                     this.postTitle = this.editPostTitle
                     this.postText = this.editPostText;
 
-                    db.collection('posts').doc(this.id).update({
+                    db.collection('posts').doc(this.$route.params.id).update({
                         Title: this.editPostTitle,
                         PostText: this.postText
                     })
@@ -93,12 +94,15 @@
                 // db.collection('posts').doc(this.$route.params.id).set(() => {
                 //     PostText: this.$refs.postText.value;
                 // })
+            },
+
+            addComment() {
+
+                console.log("next");
+                // db.collection('comments').add(() => {
+
+                // })
             }
-
-            // updateEditingView() {
-
-            //     console.log("run");
-            // }
         }
     }
 </script>
@@ -155,10 +159,46 @@
 
     .editButtonsContainer {
         width: 90vw;
-        margin: 0 auto 80px auto;
+        margin: 0 auto 30px auto;
         display: flex;
         justify-content: space-between;
     } 
+
+    .commentInputSection {
+        margin: 0 auto;
+        width: 1000px;
+    }
+
+    .commentInputSection textarea {
+        display: block;
+        margin: 0 auto 10px auto;
+        resize: none;
+        /* white-space: pre-wrap; */
+
+        background: none;
+        color: white;
+        font-size: 1.2em;
+
+        height: 1.4em;
+        /* border: none; */
+        outline: none;
+    }
+
+    .commentInputSection button {
+        display: block;
+        margin: 0 auto 60px 0;
+        border: 1px solid rgb(118,118,118);
+        padding: 7px;
+        color: white;
+    }
+
+    .commentInputSection button:hover {
+        background: rgb(49, 49, 49);
+    }
+
+    /* .commentINputSection textarea::placeholder {
+        color: grey;
+    } */
 
     button {
         text-align: center;

@@ -52,10 +52,6 @@
                     PostText: this.data.PostText
                 })
                 .then(() => {
-                    // this.$emit('updatePost');
-
-                    //this.pushHistory
-
                     this.$router.push({ path: '/posts' })
                 });
 
