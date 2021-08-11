@@ -1,27 +1,36 @@
 <template>
-    <div>
-        <textarea v-show="editing" v-model="editPostTitle" class="editTitle" />
+  <div>
+    <article>
+      <textarea v-show="editing" v-model="editPostTitle" class="editTitle" />
 
-        <h1 v-if="!editing"> {{ this.postTitle }} </h1>
+      <h1 v-if="!editing"> {{ this.postTitle }} </h1>
 
-        <textarea v-show="editing" ref="postInput" v-model="editPostText" @input="resizeTextbox($event)" class="editInput" /> 
+      <textarea v-show="editing" ref="postInput" v-model="editPostText" @input="resizeTextbox($event)" class="editInput" />
 
-        <p v-if="!editing"> {{ this.postText }} </p>
+      <p v-if="!editing"> {{ this.postText }} </p>
+    </article>
 
-        <div class="editButtonsContainer">
-            <button v-if="this.postAuthor === user" @click="updatePost(true)" :style="editing ? { 'color': 'rgb(206, 206, 206)' } : { 'color': 'white' }"> Edit </button>
+    <div class="editButtonsContainer">
+        <button v-if="this.postAuthor === user" @click="updatePost(true)" :style="editing ? { 'color': 'rgb(206, 206, 206)' } : { 'color': 'white' }"> Edit </button>
 
-            <button @click="editing = false" class="cancel" v-if="editing"> Cancel </button>
-            <button @click="updatePost(false)" v-if="editing"> Submit Changes </button>
-        </div>
-        
-        <div class="commentInputSection">
-            <textarea type="textarea" placeholder="comment" @input="resizeTextbox($event)"/>
-
-            <button @click="this.addComment"> Submit </button>
-        </div>
-
+        <button @click="editing = false" class="cancel" v-if="editing"> Cancel </button>
+        <button @click="updatePost(false)" v-if="editing"> Submit Changes </button>
     </div>
+
+    <div class="commentInputSection">
+      <textarea placeholder="comment" v-model="comment" @input="resizeTextbox($event)"/>
+<!--          commentUntested and function-->
+
+      <button @click="this.addComment"> Submit </button>
+    </div>
+
+    <section class="commentsSection">
+      <ul v-for="(comment, i) in comments" v-bind:key="i">
+        <IndividualComment :comment="comment" :index="i" :path="id"/>
+      </ul>
+<!--      not working above-->
+    </section>
+  </div>
 </template>
 
 <script>
@@ -29,81 +38,130 @@
     //v-model in on textarea auto updating paragraph
     //either remove model or reverse changes on cancel press
 
-    import { db } from '../firebase.js'; 
+    import { db } from '@/firebase';
+    import IndividualComment from "@/components/IndividualComment";
 
     export default {
+      components: {IndividualComment},
+      props: {
+          user: String
+      },
 
-        props: {
-            user: String
-        },
-
-        data() {
-            return {
-                id: '',
-                postAuthor: '',
-                postTitle: '',
-                postText: '',
-                editPostTitle: '',
-                editPostText: '',
-                editing: true
-            }
-        },
-
-        mounted() {
-            db.collection("posts").doc(this.$route.params.id).get().then((doc) => {
-                this.postAuthor = doc.data().Username;
-                this.postTitle = this.editPostTitle = doc.data().Title;
-                this.postText = this.editPostText = doc.data().PostText;
-            }).then(() => {
-                this.$refs.postInput.style.height = this.$refs.postInput.scrollHeight + "px";
-            }).then(() => {
-                this.editing = false;
-            });
-        },
-
-        methods: {
-
-            resizeTextbox(e) {
-                e.target.style.height = 'auto';
-                e.target.style.height = `${e.target.scrollHeight}px`
-            },
-
-            updatePost(editing) {
-
-                if(editing) {
-                    this.editPostText = this.postText;
-
-                    this.editing = true;
-                }
-
-                else {
-
-                    this.editing = false;
-
-                    if(this.postTitle === this.editPostTitle && this.postText === this.editPostText) return; //prevents unnessesary updates to database
-
-                    this.postTitle = this.editPostTitle
-                    this.postText = this.editPostText;
-
-                    db.collection('posts').doc(this.$route.params.id).update({
-                        Title: this.editPostTitle,
-                        PostText: this.postText
-                    })
-                }
-
-                // db.collection('posts').doc(this.$route.params.id).set(() => {
-                //     PostText: this.$refs.postText.value;
-                // })
-            },
-
-            addComment() {
-
-                console.log("next");
-                // db.collection('comments').add(() => {
-
-                // })
-            }
+      data() {
+        return {
+          id: '',
+          postAuthor: '',
+          postTitle: '',
+          postText: '',
+          editPostTitle: '',
+          editPostText: '',
+          editing: true,
+          comment: '',
+          comments: []
         }
+      },
+
+      created() {
+        let commentList = [];
+        db.collection('posts').doc(this.$route.params.id).collection('comments').onSnapshot(snapshot => {
+          commentList = [];
+          console.log(snapshot);
+
+          snapshot.forEach((doc) => {
+              commentList.push([doc.data().Comment, doc.data().Author, doc.id]);
+              console.log("ID: " + doc.id);
+          })
+
+          // maybe make a better way then timeout at 0
+          setTimeout(() => {
+            this.comments = commentList;
+          }, 0);
+        })
+
+        // console.log(commentList);
+        // this.comments = commentList;
+      },
+
+      mounted() {
+        db.collection("posts").doc(this.$route.params.id).get().then((doc) => {
+
+          this.id = this.$route.params.id;
+
+          this.postAuthor = doc.data().Username;
+          this.postTitle = this.editPostTitle = doc.data().Title;
+          this.postText = this.editPostText = doc.data().PostText;
+        }).then(() => {
+            this.$refs.postInput.style.height = this.$refs.postInput.scrollHeight + "px";
+        }).then(() => {
+            this.editing = false;
+        });
+      },
+
+      methods: {
+
+        resizeTextbox(e) {
+            e.target.style.height = 'auto';
+            e.target.style.height = `${e.target.scrollHeight}px`
+        },
+
+        updatePost(editing) {
+
+            if(editing) {
+                this.editPostText = this.postText;
+
+                this.editing = true;
+            }
+
+            else {
+
+                this.editing = false;
+
+                if(this.postTitle === this.editPostTitle && this.postText === this.editPostText) return; //prevents unnecessary updates to database
+
+                this.postTitle = this.editPostTitle
+                this.postText = this.editPostText;
+
+                db.collection('posts').doc(this.$route.params.id).update({
+                    Title: this.editPostTitle,
+                    PostText: this.postText
+                })
+            }
+
+            // db.collection('posts').doc(this.$route.params.id).set(() => {
+            //     PostText: this.$refs.postText.value;
+            // })
+        },
+
+        addComment() {
+
+          console.log(`1: ${this.$route.params.id}`);
+          //duplicating each comment
+
+          if(this.comment === '' || this.user === '') return;
+
+          db.collection('posts').doc(this.$route.params.id).collection('comments').add({
+            Comment: this.comment,
+            Author: this.user
+          })
+          .then(() => {
+            console.log("then")
+            db.collection("users").doc(this.user).collection('userComments').add({
+              Comment: this.comment,
+              Author: this.user
+            })
+          })
+          .then(() => {
+            this.comment = "";
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+
+            // db.collection('comments').add(() => {
+
+            // })
+        }
+      }
     }
 </script>
 
@@ -196,7 +254,7 @@
         background: rgb(49, 49, 49);
     }
 
-    /* .commentINputSection textarea::placeholder {
+    /* .commentInputSection textarea::placeholder {
         color: grey;
     } */
 

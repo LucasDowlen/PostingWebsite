@@ -1,10 +1,10 @@
 <template>
     <section>
         <form>
-            <!-- //somereaseon keys are getting duplicated -->
-            <input v-model="data.Title" placeholder="Title" onkeypress="return event.keyCode != 13;"/>
+            <!-- //some reason keys are getting duplicated -->
+            <input v-model="data.Title" placeholder="Title" class="returnInput"/>
             <!-- <input v-model="data.Author" placeholder="Username" onkeypress="return event.keyCode != 13;"/> -->
-            <textarea v-model="data.PostText" placeholder="Post Text" type="textarea" @input="resizeTextbox($event)"/>
+            <textarea v-model="data.PostText" placeholder="Post Text" @input="resizeTextbox($event)"/>
 
             <button v-on:click.prevent='callUpdateFunction'> Submit </button>
         </form>
@@ -15,7 +15,7 @@
 
 <script>
 
-    import { db } from '../firebase.js'
+    import { db } from '@/firebase'
 
     // import router from 'vue-router'
 
@@ -46,7 +46,7 @@
                     return;
                 }
 
-                db.collection("posts").add({     
+                db.collection("posts").add({
                     Title: this.data.Title,
                     Username: this.user,
                     PostText: this.data.PostText
@@ -64,6 +64,19 @@
                 e.target.style.height = 'auto';
                 e.target.style.height = `${e.target.scrollHeight}px`
             }
+        },
+
+        mounted() {
+          console.log(document.getElementsByClassName('returnInput')[0]);
+
+          for (let i = 0; i < document.getElementsByClassName('returnInput').length; i++) {
+            document.getElementsByClassName('returnInput')[i].addEventListener("keydown", (event) => {
+              console.log(event.key + " Key");
+              if (event.key === "Enter") {
+                event.preventDefault();
+              }
+            })
+          }
         }
     }
 

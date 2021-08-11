@@ -62,6 +62,8 @@ export default {
   *{
     list-style: none;
     cursor: default;
+    margin: 0;
+    padding: 0;
   }
 
   body{

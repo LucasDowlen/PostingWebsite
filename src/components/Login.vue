@@ -12,8 +12,8 @@
     <h1>Login Account</h1>
 
     <form>
-        <input v-model="loginToAccount.email" value="loginToAccount.email" placeholder="Email" onkeypress="return event.keyCode != 13;"/>
-        <input v-model="loginToAccount.password" value="loginToAccount.password" placeholder="Password" onkeypress="return event.keyCode != 13;"/>
+        <input v-model="loginToAccount.email" value="loginToAccount.email" placeholder="Email" class="returnInput"/>
+        <input v-model="loginToAccount.password" value="loginToAccount.password" placeholder="Password" class="returnInput"/>
 
         <button v-on:click.prevent="loginAccount"> Login </button>
     </form>
@@ -83,6 +83,20 @@
 
         this.loginToAccount.email = '';
         this.loginToAccount.password = '';
+      }
+    },
+
+    mounted() {
+      // console.log("ye");
+      // console.log(document.getElementsByClassName('returnInput')[0] + " kdlef");
+
+      for (let i = 0; i < document.getElementsByClassName('returnInput').length; i++) {
+        document.getElementsByClassName('returnInput')[i].addEventListener("keydown", (event) => {
+          console.log(event.key);
+          if (event.key === "Enter") {
+            event.preventDefault();
+          }
+        })
       }
     }
   }

@@ -7,7 +7,6 @@
                 <!-- <li class="id"> {{ postData.id }} </li> -->
                 <li class="title"> {{ postData.title }} </li>
                 <li class="username"> Posted By: {{ postData.username }} - {{ postData.id }} </li>
-                <br />
                 <li class="postText"> {{ postData.postText }} </li>
             </ul>
         </router-link>
@@ -16,7 +15,7 @@
 
 <script>
 
-    import { db } from '../firebase.js'; 
+    import { db } from '@/firebase';
 
     export default {
         name: "IndividualPost",
@@ -30,7 +29,7 @@
             deletePost() {
                 db.collection('posts').doc(this.postData.id).get().then((doc) => {
                     if(doc.data().Username === this.user) {
-                        console.log("same")
+                        console.log("same");
 
                         db.collection('posts').doc(this.postData.id).delete().then(() => { //possible remove delay or make it wait for required variable
                             setTimeout(() => {

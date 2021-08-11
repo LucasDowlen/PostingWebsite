@@ -10,7 +10,7 @@
 import PostSection from '../components/PostSection.vue';
 // import AddPost from '../components/AddPost.vue'
 
-import { db } from '../firebase'; 
+import { db } from '@/firebase';
 
 // const documentPath = 'posts/giA7TxfrlsdtXVphCNtb';
 
@@ -60,16 +60,7 @@ export default {
               }
 
               this.postsData.push(data);
-
-              // console.log(this.postsData[0].username);
           })
-          // .then(() => { //not tested but may call from server too many times and does not account for inital render;
-          //   if(oldPostsData === this.postsData){
-          //     setTimeout(() => {
-          //       this.updatePosts();
-          //     }, 1000);
-          //   }
-          // })
       })
       .catch((error) => {
         console.log("Update-Error: " + error);

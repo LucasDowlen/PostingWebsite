@@ -3,8 +3,8 @@
         <h1 class="topHeader">Create Account</h1>
 
         <form>
-            <input v-model="createAccount.email" value="createAccount.email" placeholder="Email" onkeypress="return event.keyCode != 13;"/>
-            <input v-model="createAccount.password" value="loginToAccount.password" placeholder="Password" onkeypress="return event.keyCode != 13;"/>
+            <input v-model="createAccount.email" value="createAccount.email" placeholder="Email" class="returnInput"/>
+            <input v-model="createAccount.password" value="loginToAccount.password" placeholder="Password" class="returnInput"/>
             
             <button v-on:click.prevent="createNewAccount"> Create Account </button>
         </form>
@@ -52,6 +52,20 @@
 
               this.createAccount.email = '';
               this.createAccount.password = '';
+          }
+      },
+
+      mounted() {
+          console.log("ye");
+          console.log(document.getElementsByClassName('returnInput')[0] + " kdlef");
+
+          for (let i = 0; i < document.getElementsByClassName('returnInput').length; i++) {
+            document.getElementsByClassName('returnInput')[i].addEventListener("keydown", (event) => {
+              console.log(event.key);
+              if (event.key === "Enter") {
+                event.preventDefault();
+              }
+            })
           }
       }
   }
