@@ -1,5 +1,8 @@
 # postingwebsite
 
+This project is a webiste that allows users to make/sign in to accounts, post, and respond to other users.
+It also supports editing features and uses firebase as the backend.
+
 ## Project setup
 ```
 npm install
