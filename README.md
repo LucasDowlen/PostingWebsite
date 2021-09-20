@@ -28,6 +28,9 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 
 ### Note: A firebase.js file will have to be configured to run this project, The format should be as follows:
+To run this, you must create an account with firebase and start a database. Inside the database settings, there
+will be a text block to copy and pase into the firebase.js file. Then just make the nessesary edits so it looks
+like the code below.
 
 ```
 
