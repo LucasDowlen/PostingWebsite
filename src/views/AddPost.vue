@@ -1,5 +1,11 @@
 <template>
     <section>
+
+        <section>
+          <h1>Create a Post</h1>
+          <h3>You can create a post here. You must include a title and content.</h3>
+        </section>
+
         <form>
             <!-- //some reason keys are getting duplicated -->
             <input v-model="data.Title" placeholder="Title" class="returnInput"/>
@@ -85,7 +91,24 @@
 <style scoped>
 
 section{
-    margin-top: 10vw;
+  margin-top: 10vw;
+}
+
+section section {
+  display: flex;
+  flex-direction: column;
+}
+
+h1 {
+  margin: 0 auto;
+  color: white;
+  font-size: 1.3em;
+}
+
+h3 {
+  margin: 0 auto 2em auto;
+  color: white;
+  font-size: 1em;
 }
 
 form{

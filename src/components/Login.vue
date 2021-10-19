@@ -9,9 +9,9 @@
         <button v-on:click.prevent="createNewAccount" />
     </form> -->
 
-    <h1>Login Account</h1>
 
     <form>
+        <h1>Login Account</h1>
         <input v-model="loginToAccount.email" value="loginToAccount.email" placeholder="Email" class="returnInput"/>
         <input v-model="loginToAccount.password" value="loginToAccount.password" placeholder="Password" class="returnInput"/>
 
@@ -114,20 +114,22 @@
     top: 0;
     bottom: 0;
     margin: auto;
-    
-    height: 40vh;
-    width: 60vw;
+
+    height: 50vh;
+    width: 70vw;
     position: absolute;
     z-index: 1;
   }
 
   h1{
+    margin-bottom: 1vw;
     text-align: center;
     color: white;
   }
 
   form{
-    margin-top: 3vw;
+    margin: 3vw auto 0 auto;
+    /*margin-top: 3vw;*/
     display: flex;
     flex-direction: column;
   }

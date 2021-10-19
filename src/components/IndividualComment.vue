@@ -1,8 +1,10 @@
 <template>
-  <div>
-    <h1> {{ comment[1] }} </h1>
-    <p> {{ comment[0] }} </p>
-    <span @click="this.destroy"> X </span>
+  <div class="whole-component">
+    <div class="container">
+      <span @click="this.destroy"> X </span>
+      <h1> {{ comment[1] }} </h1>
+      <p> {{ comment[0] }} </p>
+    </div>
   </div>
 </template>
 
@@ -37,11 +39,21 @@
 
 <style scoped>
 
-  div {
-    margin: 1em auto 1em 395px;
+
+  /*template {*/
+  /*  margin-right: 600px;*/
+  /*}*/
+
+  .whole-component {
+    margin-right: 600px;
+  }
+
+  div .container{
+    margin: 1em auto;  /*395px*/
     padding: 5px;
     /*background: #253138;*/
     width: 400px;
+
     /*height: 5em;*/
     border: 1px solid #ebf4fa;
   }
@@ -53,5 +65,19 @@
 
   p {
     color: white;
+  }
+
+  span {
+    position: absolute;
+    margin: 0 385px;
+
+    color: white;
+
+  }
+
+  @media screen and (max-width: 1100px) {
+    .whole-component {
+      margin-right: 0;
+    }
   }
 </style>

@@ -229,8 +229,10 @@
 
     .commentInputSection textarea {
         display: block;
-        margin: 0 auto 10px auto;
+        margin: 0 auto;
         resize: none;
+
+        width: 400px;
         /* white-space: pre-wrap; */
 
         background: none;
@@ -244,7 +246,7 @@
 
     .commentInputSection button {
         display: block;
-        margin: 0 auto 60px 0;
+        margin: 1vw auto;
         border: 1px solid rgb(118,118,118);
         padding: 7px;
         color: white;
@@ -273,8 +275,14 @@
     }
 
     @media screen and (min-width: 1100px) {
-        h1, p, textarea {
-            width: 1000px;
+
+        .commentInputSection button {
+          margin: 1vw auto 60px 0;
+        }
+
+        h1, p, .commentInputSection textarea {
+          /*margin: 0 auto;*/
+          width: 1000px;
         }
 
         .editButtonsContainer {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Posts:</h1>
+    <h1>All Posts:</h1>
 
     <div v-for="data in posts" v-bind:key="data.id">
       <IndividualPost :postData='data' :user='user' v-on:updatePost='sendUpdatePostEmit'/>
@@ -36,6 +36,7 @@
 <style scoped>
 
   h1 {
+    margin-top: 4vw;
     text-align: center;
 
     color: white;
