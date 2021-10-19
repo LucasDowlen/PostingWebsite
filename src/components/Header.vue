@@ -1,22 +1,26 @@
 <template>
     <div>
-        <ul>
+        <div>
+          <ul class="left-nav-part">
             <router-link to="/" class="routerLink"> Home </router-link>
             <router-link to="/posts" class="routerLink" > Subreddits </router-link>
             <router-link to="/create-post" class="routerLink" > Post </router-link>
+          </ul>
 
-            <div class="routerLink" v-if="user === ''" @click="this.Login"> Login </div>
-            <div class="routerLink" v-else> {{ user }} </div>
+          <ul class="right-nav-part">
+            <div class="routerLink right-nav" v-if="user === ''" @click="this.Login"> Login </div>
+            <div class="routerLink right-nav" v-else> {{ user }} </div>
 
             <div class="routerLink" @click="this.CreateAccount" v-if="user === ''"> Sign Up </div>
             <div v-else class="routerLink"> Sign Out </div>
+          </ul>
             <!-- create signout function -->
 
             <!-- <li>Home</li>
             <li>Subreddits</li>
             <li>Post</li>
             <li>Login</li> -->
-        </ul>
+        </div>
 
         <Login v-if="loggingIn" class="loginComponent"> Login </Login>
         <CreateAccount v-if="creatingAccount" class="newAccountComponent"> Sign Up </CreateAccount>
@@ -90,15 +94,41 @@
 
 <style scoped>
 
-  ul {
+
+  div div {
     display: flex;
-    justify-content: space-around;
+  }
+
+  div ul {
+    display: flex;
+    /*justify-content: space-around;*/
+
+    margin: 2vw 1vw;
+  }
+
+  div .left-nav-part {
+    margin-left: 6vw;
+  }
+
+  div .left-nav-part .routerLink{
+    margin: 0 7vw;
+  }
+
+  div .right-nav-part .right-nav{
+    margin: 0 4vw 0 15vw;
   }
 
 /* figure out if you can do this without class/id */
-  .routerLink{ 
-      text-decoration: none;
-      color: white;
+  .routerLink{
+    padding: .2em;
+    border-radius: 0.2em;
+    font-size: 1.2em;
+    text-decoration: none;
+    color: white;
+  }
+
+  .routerLink:hover {
+    background: #2c383f;
   }
 
 </style>

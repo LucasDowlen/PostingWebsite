@@ -2,7 +2,7 @@
     <div>
         <h1>Home</h1>
 
-        <router-link v-if="user === ''" to="/" class="loginLink">Login</router-link>
+        <router-link v-if="user === ''" to="/" class="loginLink">Please Login Before Posting</router-link>
         <h2 v-else> You Are Logged In </h2>
     </div>
 </template>
@@ -13,31 +13,38 @@
 
         props: {
             user: String
-        }
+        },
+
+        // methods: {
+        //   callLogin() {
+        //     this.$parent.$emit('callLogin'); //first to get
+        //   }
+        // }
     }
 </script>
 
 <style scoped>
 
     h1 {
-        margin-top: 5vw;
-        text-align: center;
-        color: white;
+      margin-top: 5vw;
+      text-align: center;
+      color: white;
     }
 
     h2 {
-        color: white;
-        text-align: center;
+      color: white;
+      text-align: center;
     }
 
     .loginLink {
-        color: white;
-        font-size: 1.6vw;
-        width: 8vw;
-        height: 1.4vw;
-        display: block;
-        margin: 5vw auto 0 auto;
-        text-align: center;
+      color: white;
+      font-size: 1.6vw;
+      width: 10vw;
+      height: 1.4vw;
+      display: block;
+      margin: 5vw auto 0 auto;
+      text-align: center;
+      text-decoration: none;
     }
 
 </style>

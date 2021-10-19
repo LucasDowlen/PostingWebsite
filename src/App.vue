@@ -1,7 +1,8 @@
 <template>
   <div id="app">
-    <Header :user='user' v-on:userUpdated="updateUser"/>
+    <Header :user='user' v-on:userUpdated="updateUser" ref="header"/>
     <router-view :user='user'/>
+<!--    third to get [v-on:callLogin="this.callLogin()"]-->
   </div>
 </template>
 
@@ -50,7 +51,12 @@ export default {
       // console.log(updatedUsername);
       console.log(`Updating User..(${updatedUsername})`);
       this.user = updatedUsername;
-    }
+    },
+    //
+    // callLogin() { //second to get
+    //   console.log("this");
+    //   this.$refs.header.Login();
+    // }
   }
 }
 </script>
