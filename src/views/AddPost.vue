@@ -117,9 +117,14 @@ form{
 }
 
 input, textarea{
+    background: #9a8c98;
     margin: 0.2vw auto;
     width: 60vw;
     font-size: 1.6em;
+}
+
+input::placeholder, textarea::placeholder {
+  color: white;
 }
 
 textarea{

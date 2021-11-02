@@ -75,7 +75,7 @@ export default {
   body{
     /* background: rgb(46, 62, 80); */
         /* background: #3d405b; */
-      background: #2f3e46;
+      background: #22223b;
   }
 
 /* #app {

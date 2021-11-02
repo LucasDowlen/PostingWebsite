@@ -1,6 +1,12 @@
 <template>
     <div>
+        <video id="background" autoplay loop muted poster="src/assets/philippines-night--.png.png">
+          <source src="https://media.publit.io/file/Philippines-night.mp4" />
+        </video>
+
         <h1>Home</h1>
+
+        <h2>"Communication is the predeccesor to invention"</h2>
 
         <router-link v-if="user === ''" to="/" class="loginLink">Please Login Before Posting</router-link>
         <h2 v-else> You Are Logged In </h2>
@@ -25,26 +31,40 @@
 
 <style scoped>
 
-    h1 {
-      margin-top: 5vw;
-      text-align: center;
-      color: white;
-    }
+  #background{
+    z-index: -1;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    /*width: 100%;*/
+    /*height: 100%;*/
+  }
 
-    h2 {
-      color: white;
-      text-align: center;
-    }
+  h1 {
+    margin-bottom: 3em;
+    font-size: 3em;
+    margin-top: 5vw;
+    /*text-align: center;*/
+    margin: 5vw auto 0 20vw;
+    color: white;
+  }
 
-    .loginLink {
-      color: white;
-      font-size: 1.6vw;
-      width: 10vw;
-      height: 1.4vw;
-      display: block;
-      margin: 5vw auto 0 auto;
-      text-align: center;
-      text-decoration: none;
-    }
+  h2 {
+    font-size: 2em;
+    color: white;
+    margin: 5vw auto 0 20vw;
+    /*text-align: center;*/
+  }
+
+  .loginLink {
+    color: white;
+    font-size: 1.6vw;
+    width: 10vw;
+    height: 1.4vw;
+    display: block;
+    margin: 5vw auto 0 20vw;
+    /*text-align: center;*/
+    text-decoration: none;
+  }
 
 </style>

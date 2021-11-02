@@ -3,8 +3,8 @@
         <div>
           <ul class="left-nav-part">
             <router-link to="/" class="routerLink"> Home </router-link>
-            <router-link to="/posts" class="routerLink" > Subreddits </router-link>
-            <router-link to="/create-post" class="routerLink" > Post </router-link>
+            <router-link to="/posts" class="routerLink" > View Posts </router-link>
+            <router-link to="/create-post" class="routerLink" > Create Post </router-link>
           </ul>
 
           <ul class="right-nav-part">

@@ -175,6 +175,8 @@
 
         font-family: 'Roboto', sans-serif;
         font-weight: 400;
+        border: 1px solid #22223b;
+        /*extra boder to prevent margin shift when changing to textarea visiblity */
     }
 
     p {
@@ -185,6 +187,8 @@
 
         white-space: pre-wrap;
         font-family: 'Open Sans', sans-serif;
+        border: 1px solid #22223b;
+        /*extra boder to prevent margin shift when changing to textarea visiblity */
     }
 
     .editTitle {
@@ -280,7 +284,7 @@
           margin: 1vw auto 60px 0;
         }
 
-        h1, p, .commentInputSection textarea {
+        h1, p, article .editInput {
           /*margin: 0 auto;*/
           width: 1000px;
         }

@@ -59,7 +59,7 @@
         padding: 0.6vw 0;
         /* background: #81b29a; */
         /* background: #81b29a; */
-        background: #52796f;
+        background: #4a4e69;
         border-radius: 0.3vw;
     }
 
