@@ -2,7 +2,7 @@
     <section>
 
         <section>
-          <h1>Create a Post</h1>
+          <h1>Create a Post Under /General</h1>
           <h3>You can create a post here. You must include a title and content.</h3>
         </section>
 
@@ -22,12 +22,16 @@
 <script>
 
     import { db } from '@/firebase'
+    import firebase from 'firebase';
+    // var AES = require("crypto-js/aes");
+    var CryptoJS = require("crypto-js");
+    const sha256 = require('js-sha256').sha256;
 
     // import router from 'vue-router'
 
     export default {
         name: "AddPost",
-        
+
         props: {
             user: String,
         },
@@ -47,28 +51,70 @@
         methods: { //not updating when stoped work
             callUpdateFunction() {
 
-                if(this.data.Title === '' || this.user === '' || this.data.PostText === ''){
+                if(this.data.Title === '' || this.user === '' || this.data.PostText === '' || !firebase.auth().currentUser.emailVerified){
                     console.log("Unfilled Fields");
                     return;
                 }
 
-                db.collection("posts").add({
-                    Title: this.data.Title,
-                    Username: this.user,
-                    PostText: this.data.PostText
-                })
-                .then(() => {
-                    this.$router.push({ path: '/posts' })
-                });
+                let decryptionkey;
 
-                this.data.Title = "";
-                // this.data.Author = "";
-                this.data.PostText = "";
+                db.collection('Encryption Key').doc('pe9izlV1les8NQ3SsDad').get().then((doc) => {
+                  console.log("---------- DATA -----------");
+
+                  decryptionkey = doc.data().Key;
+                  console.log("DK1: " + decryptionkey);
+                  decryptionkey = sha256(decryptionkey);
+
+                  decryptionkey = decryptionkey.substring(0, 16);
+
+                  console.log("DK2: " + decryptionkey);
+
+                  console.log(decryptionkey); //grabs encryption key
+                }).then(() => {
+
+                  // console.log("AES Encryption: " + CryptoJS.AES.encrypt(this.data.Title, productKey));
+                  //
+                  //
+                  let encryptedTitle = String(CryptoJS.AES.encrypt(this.data.Title, decryptionkey));
+                  // let encryptedUsername = String(CryptoJS.AES.encrypt(this.data.user, "Key"));
+                  let encryptedPostText = String(CryptoJS.AES.encrypt(this.data.PostText, decryptionkey));
+
+
+                  db.collection("posts").add({
+                    Title: encryptedTitle,
+                    Username: this.user,
+                    PostText: encryptedPostText
+                  })
+                      .then(() => {
+                        this.$router.push({ path: '/posts' })
+                      });
+
+                  this.data.Title = "";
+                  // this.data.Author = "";
+                  this.data.PostText = "";
+                });
             },
 
             resizeTextbox(e) {
+
+                // let pxThreshold = 100 / e.target.scrollHeight * 70;
+
+                // console.log("ONE: " + pxThreshold);
+
+
                 e.target.style.height = 'auto';
-                e.target.style.height = `${e.target.scrollHeight}px`
+
+                console.log(e.target.scrollHeight);
+
+
+                if(e.target.scrollHeight > 400) {
+                  e.target.style.height = 'auto';
+                  e.target.style.height = `${e.target.scrollHeight}px`
+                }
+
+                else {
+                  e.target.style.height = "400px";
+                }
             }
         },
 
@@ -91,7 +137,7 @@
 <style scoped>
 
 section{
-  margin-top: 10vw;
+  margin-top: 5vw;
 }
 
 section section {
@@ -100,13 +146,13 @@ section section {
 }
 
 h1 {
-  margin: 0 auto;
+  margin: 0 auto 0 20vw;
   color: white;
-  font-size: 1.3em;
+  font-size: 2em;
 }
 
 h3 {
-  margin: 0 auto 2em auto;
+  margin: 0 auto 2em 20vw;
   color: white;
   font-size: 1em;
 }
@@ -117,26 +163,56 @@ form{
 }
 
 input, textarea{
-    background: #9a8c98;
-    margin: 0.2vw auto;
-    width: 60vw;
-    font-size: 1.6em;
+  background: none;
+  /*width: 60vw;*/
+  font-size: 1.6em;
+  color: white;
+  border: none;
+  outline: none;
+
+  transition: all 0.2s linear;
 }
 
 input::placeholder, textarea::placeholder {
-  color: white;
+  color: #7f9ba2;
+}
+
+input{
+  border-radius: 3px;
+  border-bottom: 2px solid white;
+  margin: 0.2vw auto 0 20vw;
+  width: 20vw;
+}
+
+input:focus {
+  border-bottom: 2px solid cyan;
+  background: rgb(39, 39, 66);
+  width: 60vw;
 }
 
 textarea{
-    resize: none;
+  height: 20vh;
+  width: 60vw;
+  margin: 2vw auto;
+  resize: none;
+  border: 2px solid white;
+
+}
+
+textarea:focus {
+  height: 400px;
 }
 
 button{
-    margin: 1vw auto 0 auto;
-    background: rgb(255, 255, 255);
-    border: none;
-    width: 8vw;
-    height: 1.8vw;
+    margin: 0.5vw auto 0 20vw;
+    /*background: rgb(255, 255, 255);*/
+    background: none;
+    border: 2px solid white;
+    width: 7.5vw;
+    height: 2.6vw;
+    color: white;
+
+    font-size: 1.4em;
 }
 
 /* h3{

@@ -11,6 +11,8 @@ import PostSection from '../components/PostSection.vue';
 // import AddPost from '../components/AddPost.vue'
 
 import { db } from '@/firebase';
+import {sha256} from "js-sha256";
+var CryptoJS = require("crypto-js");
 
 // const documentPath = 'posts/giA7TxfrlsdtXVphCNtb';
 
@@ -33,34 +35,78 @@ export default {
   },
 
   created() {
-     db.collection('posts').get().then(querySnapshot => {
-       querySnapshot.forEach(doc => {
-         const data = {
+
+    let decryptionKey;
+
+    db.collection('Encryption Key').doc('pe9izlV1les8NQ3SsDad').get().then((doc) => {
+      console.log("---------- DATA -----------");
+
+      decryptionKey = doc.data().Key;
+      console.log("DK1: " + decryptionKey);
+      decryptionKey = sha256(decryptionKey);
+
+      decryptionKey = decryptionKey.substring(0, 16);
+
+      console.log("DK2: " + decryptionKey);
+
+      console.log(decryptionKey); //grabs encryption key
+    }).then(() => {
+      db.collection('posts').get().then(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          const data = {
             'id': doc.id,
             'username': doc.data().Username,
             'title': doc.data().Title,
             'postText': doc.data().PostText
-         }
+          }
 
-         this.postsData.push(data);
-       })
-     })
+          console.log("Encrypted Titles: " + data.title);
+          data.title = CryptoJS.AES.decrypt(data.title.toString(), decryptionKey).toString(CryptoJS.enc.Utf8);
+          data.postText = CryptoJS.AES.decrypt(data.postText.toString(), decryptionKey).toString(CryptoJS.enc.Utf8);
+
+          this.postsData.push(data);
+        })
+      })
+    });
   },
 
   methods: {
     updatePosts() { //sometimes called too early*
       db.collection('posts').get().then(querySnapshot => {
+
+
+        let decryptionkey;
+        // let crypt;
+        // let productKey;
+
+        db.collection('Encryption Key').doc('pe9izlV1les8NQ3SsDad').get().then((doc) => {
+          console.log("---------- DATA -----------");
+
+          decryptionkey = doc.data().Key;
+          console.log("DK1: " + decryptionkey);
+          decryptionkey = sha256(decryptionkey);
+
+          decryptionkey = decryptionkey.substring(0, 16);
+
+          console.log("DK2: " + decryptionkey);
+
+          console.log(decryptionkey); //grabs encryption key
+        }).then(() => {
           this.postsData = [];
           querySnapshot.forEach(doc => {
-              const data = {
-                  'id': doc.id,
-                  'username': doc.data().Username,
-                  'title': doc.data().Title,
-                  'postText': doc.data().PostText
-              }
+            const data = {
+              'id': doc.id,
+              'username': doc.data().Username,
+              'title': doc.data().Title,
+              'postText': doc.data().PostText
+            }
 
-              this.postsData.push(data);
-          })
+            // //two lines below may be unnessesary
+            data.title = CryptoJS.AES.decrypt(data.title.toString(), decryptionkey).toString(CryptoJS.enc.Utf8);
+            data.postText = CryptoJS.AES.decrypt(data.postText.toString(), decryptionkey).toString(CryptoJS.enc.Utf8);
+
+            this.postsData.push(data);
+          })})
       })
       .catch((error) => {
         console.log("Update-Error: " + error);

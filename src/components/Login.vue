@@ -5,7 +5,7 @@
     <form>
         <input v-model="createAccount.email" value="createAccount.email" placeholder="Email" onkeypress="return event.keyCode != 13;"/>
         <input v-model="createAccount.password" value="loginToAccount.password" placeholder="Password" onkeypress="return event.keyCode != 13;"/>
-        
+
         <button v-on:click.prevent="createNewAccount" />
     </form> -->
 
@@ -26,6 +26,7 @@
 
   // import { db } from '../firebase.js';
   import firebase from 'firebase';
+  const sha256 = require('js-sha256').sha256;
 
   export default {
     // name: 'login',
@@ -56,7 +57,7 @@
       //       console.log("error");
       //     }); //not working
 
-      //   // db.collection("accounts").add({     
+      //   // db.collection("accounts").add({
       //   //     username: this.createAccount.username,
       //   //     password: this.createAccount.password,
       //   //     // PostText: this.data.PostText
@@ -68,14 +69,22 @@
 
       loginAccount() {
 
-        var newEmail = this.loginToAccount.email.toString();
-        var newPass = this.loginToAccount.password.toString();
+        let newEmail = this.loginToAccount.email.toString();
+        let newPass = this.loginToAccount.password.toString();
 
-        console.log("NewLogin: " + newEmail + " pass: " + newPass);
+        // let emailSplit = newEmail.split("@")
+
+        // newEmail = sha256(emailSplit[0]) + "@" + emailSplit[1];
+        newPass = sha256(newPass);
+
+        console.log("NewLogin: " + newEmail);
+        console.log("NewPass: " + newPass);
         firebase.auth().signInWithEmailAndPassword(newEmail, newPass)
           .then(() => {
             console.log("successful login");
             this.$parent.$emit('userUpdated', newEmail);
+
+            console.log(firebase.auth().currentUser.email);
           })
           .catch((error) => {
             console.log(error);

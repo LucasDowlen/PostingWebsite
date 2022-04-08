@@ -1,10 +1,11 @@
 <template>
     <div>
-        <div>
+        <div class = navComponent>
           <ul class="left-nav-part">
             <router-link to="/" class="routerLink"> Home </router-link>
             <router-link to="/posts" class="routerLink" > View Posts </router-link>
             <router-link to="/create-post" class="routerLink" > Create Post </router-link>
+            <router-link to="/images" class="routerLink"> Images </router-link>
           </ul>
 
           <ul class="right-nav-part">
@@ -12,7 +13,7 @@
             <div class="routerLink right-nav" v-else> {{ user }} </div>
 
             <div class="routerLink" @click="this.CreateAccount" v-if="user === ''"> Sign Up </div>
-            <div v-else class="routerLink"> Sign Out </div>
+            <div v-else class="routerLink" @click="this.SignOut"> Sign Out </div>
           </ul>
             <!-- create signout function -->
 
@@ -31,6 +32,7 @@
 
 //user not updating...
 
+  import firebase from 'firebase';
   import Login from './Login.vue';
   import CreateAccount from './CreateAccount.vue';
 
@@ -63,6 +65,10 @@
           this.loggingIn = true;
 
           console.log(this);
+        },
+
+        SignOut() {
+          firebase.auth().signOut();
         }
       },
 
@@ -95,28 +101,43 @@
 <style scoped>
 
 
-  div div {
+  .navComponent {
+    z-index: 1;
+    padding-bottom: 10px;
     display: flex;
+    height: 2vw;
+    /*background: rgb(34,34,59); not in fixed position*/
+    /*margin: 0 auto;*/
   }
 
   div ul {
+    position: fixed;
+    /*position: sticky;*/
     display: flex;
-    /*justify-content: space-around;*/
+    justify-content: space-around;
+    width: 23vw;
 
-    margin: 2vw 1vw;
+    padding: 10px;
+
+    background: #1D1C21;
+    border-radius: 15px;
+
+
+    /*margin: 2vw auto 0 auto;*/
   }
+
 
   div .left-nav-part {
-    margin-left: 6vw;
+    margin: 0.8vw auto 0 25vw;
   }
 
-  div .left-nav-part .routerLink{
-    margin: 0 7vw;
+  div .right-nav-part {
+    margin: 0.8vw 0 0 51vw;
   }
 
-  div .right-nav-part .right-nav{
-    margin: 0 4vw 0 15vw;
-  }
+  /*div .right-nav-part .right-nav{*/
+  /*  margin: 0 4vw 0 15vw;*/
+  /*}*/
 
 /* figure out if you can do this without class/id */
   .routerLink{

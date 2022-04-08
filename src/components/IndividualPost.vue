@@ -56,10 +56,11 @@
     section {
         width: 95vw;
         margin: 2em auto;
-        padding: 0.6vw 0;
+        padding: 15px 0;
         /* background: #81b29a; */
         /* background: #81b29a; */
-        background: #4a4e69;
+        /*background: #4a4e69;*/
+        background: #1D1C21;
         border-radius: 0.3vw;
     }
 
@@ -111,11 +112,11 @@
 
     @media screen and (min-width: 800px) {
         section {
-            width: 70vw;
+            width: 50vw;
         }
 
         ul li {
-            width: 65vw;
+            width: 45vw;
         }
 
         /* div ul li {
@@ -124,13 +125,13 @@
 
         .title {
             /* font-size: 1.8vw; */
-            width: 65vw;
+            width: 45vw;
             margin-bottom: 0.2vw;
         }
 
         span{
-            margin: -0.2vw 0 0 68vw;
+            margin: -0.2vw 0 0 48vw;
             /* font-size: 1.4vw; */
-        } 
+        }
     }
 </style>

@@ -40,6 +40,8 @@
 
     import { db } from '@/firebase';
     import IndividualComment from "@/components/IndividualComment";
+    import CryptoJS from "crypto-js";
+    import {sha256} from "js-sha256";
 
     export default {
       components: {IndividualComment},
@@ -63,9 +65,11 @@
 
       created() {
         let commentList = [];
+
+        //slim chance was incidentally uncommented
         db.collection('posts').doc(this.$route.params.id).collection('comments').onSnapshot(snapshot => {
           commentList = [];
-          console.log(snapshot);
+          console.log(snapshot.getValue());
 
           snapshot.forEach((doc) => {
               commentList.push([doc.data().Comment, doc.data().Author, doc.id]);
@@ -83,33 +87,81 @@
       },
 
       mounted() {
-        db.collection("posts").doc(this.$route.params.id).get().then((doc) => {
 
-          this.id = this.$route.params.id;
+        let decryptionKey;
 
-          this.postAuthor = doc.data().Username;
-          this.postTitle = this.editPostTitle = doc.data().Title;
-          this.postText = this.editPostText = doc.data().PostText;
+        db.collection('Encryption Key').doc('pe9izlV1les8NQ3SsDad').get().then((doc) => {
+          console.log("---------- DATA -----------");
+
+          decryptionKey = doc.data().Key;
+          console.log("DK1: " + decryptionKey);
+          decryptionKey = sha256(decryptionKey);
+
+          decryptionKey = decryptionKey.substring(0, 16);
+
+          console.log("DK2: " + decryptionKey);
+
+          console.log(decryptionKey); //grabs encryption key
         }).then(() => {
-            this.$refs.postInput.style.height = this.$refs.postInput.scrollHeight + "px";
+          db.collection("posts").doc(this.$route.params.id).get().then((doc) => {
+
+            this.id = this.$route.params.id;
+
+            let author = doc.data().Username;
+            let postTitle = doc.data().Title;
+            let postText = doc.data().PostText;
+
+            this.postAuthor = author;
+            this.postTitle = CryptoJS.AES.decrypt(postTitle.toString(), decryptionKey).toString(CryptoJS.enc.Utf8);
+            this.postText = CryptoJS.AES.decrypt(postText.toString(), decryptionKey).toString(CryptoJS.enc.Utf8);
+        })}).then(() => {
+
+          console.log("Post Text After Decryption: " + this.postText);
+
+          console.log(this.$refs.postInput);
+          console.log("Scroll Height:" + this.$refs.postInput.scrollHeight);
+          console.log("Offset Height:" + this.$refs.postInput.offsetHeight);
+          console.log("Client Height:" + this.$refs.postInput.clientHeight);
+
+
+          console.log("Parent Scroll Height:" + this.$refs.postInput.parentElement.scrollHeight);
+          console.log("Parent Offset Height:" + this.$refs.postInput.parentElement.offsetHeight);
+          console.log("Parent Client Height:" + this.$refs.postInput.parentElement.clientHeight);
+          // this.$refs.postInput.style.height = this.$refs.postInput.scrollHeight - 100 + "px"; //this stopped  working when text was encrypted //seems broken after encryption and moved
+
         }).then(() => {
             this.editing = false;
         });
       },
 
       methods: {
-
         resizeTextbox(e) {
+
+            let scrollLeft = window.pageXOffset ||
+                (document.documentElement || document.body.parentNode || document.body).scrollLeft;
+
+            let scrollTop  = window.pageYOffset ||
+                (document.documentElement || document.body.parentNode || document.body).scrollTop;
+
+            console.log("E:");
+            console.log(e);
+
             e.target.style.height = 'auto';
             e.target.style.height = `${e.target.scrollHeight}px`
+
+            window.scrollTo(scrollLeft, scrollTop);
         },
 
         updatePost(editing) {
 
             if(editing) {
+                this.editPostTitle = this.postTitle;
                 this.editPostText = this.postText;
 
                 this.editing = true;
+
+                this.$refs.postInput.style.height = this.$refs.postInput.parentElement.scrollHeight - 80 + "px"; //maybe tweak subtracted  variable
+
             }
 
             else {
@@ -118,18 +170,35 @@
 
                 if(this.postTitle === this.editPostTitle && this.postText === this.editPostText) return; //prevents unnecessary updates to database
 
-                this.postTitle = this.editPostTitle
-                this.postText = this.editPostText;
 
-                db.collection('posts').doc(this.$route.params.id).update({
-                    Title: this.editPostTitle,
-                    PostText: this.postText
+                let decryptionKey;
+
+                db.collection('Encryption Key').doc('pe9izlV1les8NQ3SsDad').get().then((doc) => {
+                  console.log("---------- DATA -----------");
+
+                  decryptionKey = doc.data().Key;
+                  console.log("DK1: " + decryptionKey);
+                  decryptionKey = sha256(decryptionKey);
+
+                  decryptionKey = decryptionKey.substring(0, 16);
+
+                  console.log("DK2: " + decryptionKey);
+
+                  console.log(decryptionKey); //grabs encryption key
+                }).then(() => {
+                  let encryptedTitle = String(CryptoJS.AES.encrypt(this.editPostTitle, decryptionKey));
+                  let encryptedText = String(CryptoJS.AES.encrypt(this.editPostText, decryptionKey));
+
+                  this.postTitle = this.editPostTitle
+                  this.postText = this.editPostText;
+
+                  db.collection('posts').doc(this.$route.params.id).update({
+                    Title: encryptedTitle,
+                    PostText: encryptedText
+                  })
                 })
             }
 
-            // db.collection('posts').doc(this.$route.params.id).set(() => {
-            //     PostText: this.$refs.postText.value;
-            // })
         },
 
         addComment() {
@@ -176,6 +245,12 @@
         font-family: 'Roboto', sans-serif;
         font-weight: 400;
         border: 1px solid #22223b;
+
+        width: 1000px;
+
+        white-space: pre-wrap;
+        resize: none;
+
         /*extra boder to prevent margin shift when changing to textarea visiblity */
     }
 
@@ -193,7 +268,7 @@
 
     .editTitle {
 
-        /* margin: 5vw auto 3vw auto; */
+        /*margin: 5vw auto 3vw auto;*/
 
         background: none;
         display: block;
@@ -205,7 +280,7 @@
 
     .editInput {
         display: block;
-        margin: 0 auto 10px auto;
+        margin: -37px auto 10px auto;
         background: none;
         outline: none;
         /* border: none; */
@@ -224,7 +299,7 @@
         margin: 0 auto 30px auto;
         display: flex;
         justify-content: space-between;
-    } 
+    }
 
     .commentInputSection {
         margin: 0 auto;
@@ -267,7 +342,7 @@
     button {
         text-align: center;
         color: rgb(255, 255, 255);
-        
+
 
         font-size: 1.2em;
         background: none;

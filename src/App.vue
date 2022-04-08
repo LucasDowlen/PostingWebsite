@@ -3,18 +3,22 @@
     <Header :user='user' v-on:userUpdated="updateUser" ref="header"/>
     <router-view :user='user'/>
 <!--    third to get [v-on:callLogin="this.callLogin()"]-->
+<!--    figure out if v-on:userUpdated="updateUser" is unnecessary/broken/partial code;-->
   </div>
 </template>
 
 <script>
-import Header from './components/Header.vue'
+import Header from './components/Header.vue';
+import firebase from 'firebase';
+// import Masonry from "masonry-layout";
+// import onAuthStateChanged from "firebase/auth";
 // import Header from './components/Header.vue';
 // import PostSection from './components/PostSection.vue';
 // import AddPost from './components/AddPost.vue'
 
-// import { db } from './firebase'; 
+// import { db } from './firebase';
 
-// const documentPath = 'posts/giA7TxfrlsdtXVphCNtb';
+// const documentPath = 'posts/giA7TxfrlsdtXVphCNtb';.parentElement.
 
 export default {
   components: { Header },
@@ -47,18 +51,37 @@ export default {
   // },
 
   methods: {
-    updateUser(updatedUsername) {
-      // console.log(updatedUsername);
-      console.log(`Updating User..(${updatedUsername})`);
-      this.user = updatedUsername;
-    },
-    //
-    // callLogin() { //second to get
-    //   console.log("this");
-    //   this.$refs.header.Login();
-    // }
-  }
+    // updateUser(updatedUsername) {
+    //   // console.log(updatedUsername);
+    //   console.log(`Updating User..(${updatedUsername})`);
+    //   this.user = updatedUsername;
+    // },
+
+    updateUser() {
+      console.log("!...");
+
+      if(firebase.auth().currentUser != null) {
+        this.user = firebase.auth().currentUser.email;
+        console.log("User Updated: " + firebase.auth().currentUser.email);
+      }
+    }
+  },
+
+  created() {
+    this.updateUser();
+    firebase.auth().onAuthStateChanged((user) => {
+      if(user) {
+        console.log("User True");
+        this.updateUser();
+      }
+      else {
+        console.log("User False");
+        this.user = '';
+      }
+    });
+  },
 }
+
 </script>
 
 <style>
@@ -75,7 +98,10 @@ export default {
   body{
     /* background: rgb(46, 62, 80); */
         /* background: #3d405b; */
-      background: #22223b;
+
+      /*background: #22223b;*/
+
+    background: #111111;
   }
 
 /* #app {

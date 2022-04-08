@@ -4,7 +4,7 @@
           <h1 class="topHeader">Create Account</h1>
           <input v-model="createAccount.email" value="createAccount.email" placeholder="Email" class="returnInput"/>
           <input v-model="createAccount.password" value="loginToAccount.password" placeholder="Password" class="returnInput"/>
-            
+
           <button v-on:click.prevent="createNewAccount"> Create Account </button>
         </form>
     </div>
@@ -13,6 +13,8 @@
 <script>
 
   import firebase from 'firebase';
+  const sha256 = require('js-sha256').sha256; //may be removable
+  // import { db } from "../firebase"; //seems removable
 
     export default {
 
@@ -31,11 +33,23 @@
 
               console.log("User: " + this.createAccount.email + " Pass: " + this.createAccount.password);
 
-              var newEmail = this.createAccount.email.toString();
-              var newPass = this.createAccount.password.toString();
+              let newEmail = this.createAccount.email.toString();
+              let newPass = this.createAccount.password.toString();
+
+              // let emailSplit = newEmail.split("@")
+              //
+              // newEmail = sha256(emailSplit[0]) + "@" + emailSplit[1];
+              newPass = sha256(newPass);
+
+              console.log("HashedEmail: " + newEmail)
+              console.log("HashedPassword: " +  newPass);
+
+
+              // firebase.auth().sendSignInLinkToEmail(newEmail, {url: "http://localhost:8080/", handleCodeInApp: true}); //for passwordless sign in
 
               firebase.auth().createUserWithEmailAndPassword(newEmail, newPass)
               .then(() => {
+                  firebase.auth().currentUser.sendEmailVerification({url: "http://localhost:8080/"});
                   console.log("Success! New Account Made");
               })
               .catch((error) => {
@@ -43,7 +57,7 @@
                   console.log("error");
               }); //not working
 
-              // db.collection("accounts").add({     
+              // db.collection("accounts").add({
               //     username: this.createAccount.username,
               //     password: this.createAccount.password,
               //     // PostText: this.data.PostText
@@ -56,7 +70,7 @@
 
       mounted() {
           console.log("ye");
-          console.log(document.getElementsByClassName('returnInput')[0] + " kdlef");
+          console.log(document.getElementsByClassName('returnInput')[0]);
 
           for (let i = 0; i < document.getElementsByClassName('returnInput').length; i++) {
             document.getElementsByClassName('returnInput')[i].addEventListener("keydown", (event) => {
