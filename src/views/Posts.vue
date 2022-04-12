@@ -1,8 +1,10 @@
 <template>
-  <div>
+  <div class="wrapper">
+    <section></section>
     <!-- <Header /> -->
     <PostSection :posts="postsData" :user='user' v-on:updatePost='updatePosts' />
     <!-- <AddPost v-on:updatePost='updatePosts' :user='user'/> -->
+    <section></section>
   </div>
 </template>
 
@@ -117,7 +119,19 @@ export default {
 </script>
 
 
-<style>
+<style scoped>
+
+  .wrapper {
+    display: flex;
+    justify-content: space-around;
+  }
+
+  section {
+    margin: calc(6.1vw + 2.5em) 2vw 0 2vw;
+    width:20vw;
+    height: 80vh;
+    background: rgb(29,28,33);
+  }
 
   /* *{
     list-style: none;

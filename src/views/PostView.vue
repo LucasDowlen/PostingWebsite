@@ -24,7 +24,7 @@
       <button @click="this.addComment"> Submit </button>
     </div>
 
-    <section class="commentsSection">
+    <section>
       <ul v-for="(comment, i) in comments" v-bind:key="i">
         <IndividualComment :comment="comment" :index="i" :path="id"/>
       </ul>
@@ -64,22 +64,43 @@
       },
 
       created() {
-        let commentList = [];
+
+
+        // let commentList = [];
 
         //slim chance was incidentally uncommented
         db.collection('posts').doc(this.$route.params.id).collection('comments').onSnapshot(snapshot => {
-          commentList = [];
-          console.log(snapshot.getValue());
+          let commentList = [];
+          let decryptionKey;
+          // console.log(snapshot.getValue());
 
-          snapshot.forEach((doc) => {
-              commentList.push([doc.data().Comment, doc.data().Author, doc.id]);
-              console.log("ID: " + doc.id);
+          db.collection('Encryption Key').doc('pe9izlV1les8NQ3SsDad').get().then((doc) => {
+
+            decryptionKey = doc.data().Key;
+            decryptionKey = sha256(decryptionKey);
+
+            decryptionKey = decryptionKey.substring(0, 16);
+          }).then(() => {
+            snapshot.forEach((doc) => {
+
+              console.log("DocID: " + doc.id);
+
+              let comment = CryptoJS.AES.decrypt(doc.data().Comment, decryptionKey).toString(CryptoJS.enc.Utf8);
+              let author = CryptoJS.AES.decrypt(doc.data().Author, decryptionKey).toString(CryptoJS.enc.Utf8);
+
+              // console.log(comment);
+              // console.log(author);
+              //
+              // comment = comment.toString(CryptoJS.enc.Utf8)
+              // author = author.toString(CryptoJS.enc.Utf8);
+
+
+              commentList.push([comment, author, doc.id]);
+            })
           })
 
-          // maybe make a better way then timeout at 0
-          setTimeout(() => {
-            this.comments = commentList;
-          }, 0);
+          // removed timeout of 0
+          this.comments = commentList;
         })
 
         // console.log(commentList);
@@ -91,17 +112,11 @@
         let decryptionKey;
 
         db.collection('Encryption Key').doc('pe9izlV1les8NQ3SsDad').get().then((doc) => {
-          console.log("---------- DATA -----------");
 
           decryptionKey = doc.data().Key;
-          console.log("DK1: " + decryptionKey);
           decryptionKey = sha256(decryptionKey);
 
           decryptionKey = decryptionKey.substring(0, 16);
-
-          console.log("DK2: " + decryptionKey);
-
-          console.log(decryptionKey); //grabs encryption key
         }).then(() => {
           db.collection("posts").doc(this.$route.params.id).get().then((doc) => {
 
@@ -115,22 +130,23 @@
             this.postTitle = CryptoJS.AES.decrypt(postTitle.toString(), decryptionKey).toString(CryptoJS.enc.Utf8);
             this.postText = CryptoJS.AES.decrypt(postText.toString(), decryptionKey).toString(CryptoJS.enc.Utf8);
         })}).then(() => {
-
-          console.log("Post Text After Decryption: " + this.postText);
-
-          console.log(this.$refs.postInput);
-          console.log("Scroll Height:" + this.$refs.postInput.scrollHeight);
-          console.log("Offset Height:" + this.$refs.postInput.offsetHeight);
-          console.log("Client Height:" + this.$refs.postInput.clientHeight);
-
-
-          console.log("Parent Scroll Height:" + this.$refs.postInput.parentElement.scrollHeight);
-          console.log("Parent Offset Height:" + this.$refs.postInput.parentElement.offsetHeight);
-          console.log("Parent Client Height:" + this.$refs.postInput.parentElement.clientHeight);
-          // this.$refs.postInput.style.height = this.$refs.postInput.scrollHeight - 100 + "px"; //this stopped  working when text was encrypted //seems broken after encryption and moved
-
-        }).then(() => {
             this.editing = false;
+        }).then(() => {
+          this.comments = db.collection("posts").doc(this.$route.params.id).collection("comments").get().then(querySnapshot => {
+
+            let newList = [];
+
+            querySnapshot.forEach(doc => {
+              let author = CryptoJS.AES.decrypt(doc.data().Author.toString(), decryptionKey).toString(CryptoJS.enc.Utf8);
+              let comment = CryptoJS.AES.decrypt(doc.data().Comment.toString(), decryptionKey).toString(CryptoJS.enc.Utf8);
+
+              var data = [author, comment, doc.id]
+
+              newList.push(data);
+            })
+
+            this.comments = newList;
+          });
         });
       },
 
@@ -142,9 +158,6 @@
 
             let scrollTop  = window.pageYOffset ||
                 (document.documentElement || document.body.parentNode || document.body).scrollTop;
-
-            console.log("E:");
-            console.log(e);
 
             e.target.style.height = 'auto';
             e.target.style.height = `${e.target.scrollHeight}px`
@@ -161,7 +174,6 @@
                 this.editing = true;
 
                 this.$refs.postInput.style.height = this.$refs.postInput.parentElement.scrollHeight - 80 + "px"; //maybe tweak subtracted  variable
-
             }
 
             else {
@@ -174,17 +186,11 @@
                 let decryptionKey;
 
                 db.collection('Encryption Key').doc('pe9izlV1les8NQ3SsDad').get().then((doc) => {
-                  console.log("---------- DATA -----------");
 
                   decryptionKey = doc.data().Key;
-                  console.log("DK1: " + decryptionKey);
                   decryptionKey = sha256(decryptionKey);
 
                   decryptionKey = decryptionKey.substring(0, 16);
-
-                  console.log("DK2: " + decryptionKey);
-
-                  console.log(decryptionKey); //grabs encryption key
                 }).then(() => {
                   let encryptedTitle = String(CryptoJS.AES.encrypt(this.editPostTitle, decryptionKey));
                   let encryptedText = String(CryptoJS.AES.encrypt(this.editPostText, decryptionKey));
@@ -203,17 +209,25 @@
 
         addComment() {
 
-          console.log(`1: ${this.$route.params.id}`);
-          //duplicating each comment
-
           if(this.comment === '' || this.user === '') return;
 
-          db.collection('posts').doc(this.$route.params.id).collection('comments').add({
-            Comment: this.comment,
-            Author: this.user
-          })
-          .then(() => {
-            console.log("then")
+          let decryptionKey;
+
+          db.collection('Encryption Key').doc('pe9izlV1les8NQ3SsDad').get().then((doc) => {
+
+            decryptionKey = doc.data().Key;
+            decryptionKey = sha256(decryptionKey);
+
+            decryptionKey = decryptionKey.substring(0, 16);
+          }).then(() => {
+              const comment = String(CryptoJS.AES.encrypt(this.comment, decryptionKey));
+              const user = String(CryptoJS.AES.encrypt(this.user, decryptionKey));
+
+            db.collection('posts').doc(this.$route.params.id).collection('comments').add({
+              Comment: comment,
+              Author: user
+            })
+          }).then(() => {
             db.collection("users").doc(this.user).collection('userComments').add({
               Comment: this.comment,
               Author: this.user
@@ -244,7 +258,7 @@
 
         font-family: 'Roboto', sans-serif;
         font-weight: 400;
-        border: 1px solid #22223b;
+        /*border: 1px solid #22223b;*/
 
         width: 1000px;
 
@@ -262,7 +276,9 @@
 
         white-space: pre-wrap;
         font-family: 'Open Sans', sans-serif;
-        border: 1px solid #22223b;
+
+        padding: 16px;
+        border: 1px solid white;
         /*extra boder to prevent margin shift when changing to textarea visiblity */
     }
 
@@ -334,6 +350,11 @@
     .commentInputSection button:hover {
         background: rgb(49, 49, 49);
     }
+
+    /*.commentsSection {*/
+    /*  width: 2000px;*/
+    /*}*/
+
 
     /* .commentInputSection textarea::placeholder {
         color: grey;

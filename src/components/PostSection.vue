@@ -19,7 +19,7 @@
       posts: Array,
       user: String
     },
-    
+
     components: {
       IndividualPost
     },
@@ -35,9 +35,16 @@
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
+  div{
+    display: flex;
+    flex-direction: column;
+  }
+
   h1 {
     margin-top: 4vw;
     text-align: center;
+
+    font-size: 2.5em;
 
     color: white;
   }

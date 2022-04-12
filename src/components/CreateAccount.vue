@@ -44,10 +44,14 @@
               console.log("HashedEmail: " + newEmail)
               console.log("HashedPassword: " +  newPass);
 
-
-              // firebase.auth().sendSignInLinkToEmail(newEmail, {url: "http://localhost:8080/", handleCodeInApp: true}); //for passwordless sign in
+              // firebase.auth().currentUser.updateProfile({displayName: "Dear User"});
 
               firebase.auth().createUserWithEmailAndPassword(newEmail, newPass)
+               .then(() => {
+                 let thisUser = firebase.auth().currentUser;
+                 let username = thisUser.email.split("@")[0];
+                 return thisUser.updateProfile({displayName: username});
+               })
               .then(() => {
                   firebase.auth().currentUser.sendEmailVerification({url: "http://localhost:8080/"});
                   console.log("Success! New Account Made");

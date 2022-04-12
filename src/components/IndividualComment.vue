@@ -24,7 +24,9 @@
     methods: {
       destroy() {
         console.log("Destroy!")
+        console.log(this.comment);
 
+        //only destroying after comment is added (bug/fix)
         db.collection('posts').doc(this.path).collection("comments").doc(this.comment[2]).delete().then(() => {
           console.log(`Path: ${this.path} ID: ${this.comment[2]}`);
         });
@@ -50,7 +52,7 @@
 
   div .container{
     margin: 1em auto;  /*395px*/
-    padding: 5px;
+    padding: 5px 15px 5px 5px;
     /*background: #253138;*/
     width: 400px;
 
@@ -69,7 +71,7 @@
 
   span {
     position: absolute;
-    margin: 0 385px;
+    margin: 0 0 0 400px;
 
     color: white;
 

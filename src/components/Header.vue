@@ -9,11 +9,11 @@
           </ul>
 
           <ul class="right-nav-part">
-            <div class="routerLink right-nav" v-if="user === ''" @click="this.Login"> Login </div>
-            <div class="routerLink right-nav" v-else> {{ user }} </div>
+            <li class="routerLink right-nav" v-if="user === ''" @click="this.Login"> Login </li>
+            <li class="routerLink right-nav" v-else> {{ user }} </li>
 
-            <div class="routerLink" @click="this.CreateAccount" v-if="user === ''"> Sign Up </div>
-            <div v-else class="routerLink" @click="this.SignOut"> Sign Out </div>
+            <li class="routerLink" @click="this.CreateAccount" v-if="user === ''"> Sign Up </li>
+            <li v-else class="routerLink" @click="this.SignOut"> Sign Out </li>
           </ul>
             <!-- create signout function -->
 
@@ -111,6 +111,7 @@
   }
 
   div ul {
+    z-index: 1;
     position: fixed;
     /*position: sticky;*/
     display: flex;
@@ -128,11 +129,11 @@
 
 
   div .left-nav-part {
-    margin: 0.8vw auto 0 25vw;
+    margin: 0.5vw auto 0 25vw;
   }
 
   div .right-nav-part {
-    margin: 0.8vw 0 0 51vw;
+    margin: 0.5vw 0 0 51vw;
   }
 
   /*div .right-nav-part .right-nav{*/

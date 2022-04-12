@@ -61,9 +61,6 @@
       });
 
       Promise.all(images).then(() => {
-        console.log("Images loaded!");
-
-        console.log("Masonry:");
         const masonry = new Masonry(this.$refs.grid, {
           fitWidth: true,
         });
