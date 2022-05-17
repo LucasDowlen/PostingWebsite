@@ -1,6 +1,6 @@
 # postingwebsite
 
-This project utilizes VueJs to build a web application that allows users to post to a public form. The project uses user sign in and email confirmation with Firebase and passwords are hashed twice, client-side and through firebase. All posted data is encrypted clientside with EAS before being posted to Firebase database. This project also supports users updating and deleting their content from the site.
+This project utilizes VueJs and Firebase to build a basic full-stack CRUD application that allows users to post to a public form. The project uses user sign in and email confirmation with Firebase and passwords are hashed twice, client-side and through firebase. All posted data is encrypted clientside with EAS before being posted to Firebase database. Posts are publically visible and users can individually comment on these.
 
 
 
