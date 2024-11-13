@@ -7,15 +7,11 @@
         </section>
 
         <form>
-            <!-- //some reason keys are getting duplicated -->
             <input v-model="data.Title" placeholder="Title" class="returnInput"/>
-            <!-- <input v-model="data.Author" placeholder="Username" onkeypress="return event.keyCode != 13;"/> -->
             <textarea v-model="data.PostText" placeholder="Post Text" @input="resizeTextbox($event)"/>
 
             <button v-on:click.prevent='callUpdateFunction'> Submit </button>
         </form>
-
-        <!-- <h3> {{ data.test }} + test?</h3> -->
     </section>
 </template>
 
@@ -23,11 +19,8 @@
 
     import { db } from '@/firebase'
     import firebase from 'firebase';
-    // var AES = require("crypto-js/aes");
     var CryptoJS = require("crypto-js");
     const sha256 = require('js-sha256').sha256;
-
-    // import router from 'vue-router'
 
     export default {
         name: "AddPost",
@@ -48,7 +41,7 @@
             }
         },
 
-        methods: { //not updating when stoped work
+        methods: {
             callUpdateFunction() {
 
                 if(this.data.Title === '' || this.user === '' || this.data.PostText === '' || !firebase.auth().currentUser.emailVerified){
@@ -66,19 +59,9 @@
                   decryptionkey = sha256(decryptionkey);
 
                   decryptionkey = decryptionkey.substring(0, 16);
-
-                  console.log("DK2: " + decryptionkey);
-
-                  console.log(decryptionkey); //grabs encryption key
                 }).then(() => {
-
-                  // console.log("AES Encryption: " + CryptoJS.AES.encrypt(this.data.Title, productKey));
-                  //
-                  //
                   let encryptedTitle = String(CryptoJS.AES.encrypt(this.data.Title, decryptionkey));
-                  // let encryptedUsername = String(CryptoJS.AES.encrypt(this.data.user, "Key"));
                   let encryptedPostText = String(CryptoJS.AES.encrypt(this.data.PostText, decryptionkey));
-
 
                   db.collection("posts").add({
                     Title: encryptedTitle,
@@ -90,28 +73,18 @@
                       });
 
                   this.data.Title = "";
-                  // this.data.Author = "";
                   this.data.PostText = "";
                 });
             },
 
             resizeTextbox(e) {
-
-                // let pxThreshold = 100 / e.target.scrollHeight * 70;
-
-                // console.log("ONE: " + pxThreshold);
-
-
                 e.target.style.height = 'auto';
-
                 console.log(e.target.scrollHeight);
-
 
                 if(e.target.scrollHeight > 400) {
                   e.target.style.height = 'auto';
                   e.target.style.height = `${e.target.scrollHeight}px`
                 }
-
                 else {
                   e.target.style.height = "400px";
                 }
@@ -133,7 +106,6 @@
     }
 
 </script>
-
 <style scoped>
 
 section{
@@ -164,7 +136,6 @@ form{
 
 input, textarea{
   background: none;
-  /*width: 60vw;*/
   font-size: 1.6em;
   color: white;
   border: none;
@@ -205,7 +176,6 @@ textarea:focus {
 
 button{
     margin: 0.5vw auto 0 20vw;
-    /*background: rgb(255, 255, 255);*/
     background: none;
     border: 2px solid white;
     width: 7.5vw;
@@ -214,12 +184,4 @@ button{
 
     font-size: 1.4em;
 }
-
-/* h3{
-    color: white;
-    font-size: 3vw;
-
-    white-space: pre-wrap;
-} */
-
 </style>

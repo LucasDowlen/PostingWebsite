@@ -19,8 +19,6 @@
 
     <div class="commentInputSection">
       <textarea placeholder="comment" v-model="comment" @input="resizeTextbox($event)"/>
-<!--          commentUntested and function-->
-
       <button @click="this.addComment"> Submit </button>
     </div>
 
@@ -28,16 +26,11 @@
       <ul v-for="(comment, i) in comments" v-bind:key="i">
         <IndividualComment :comment="comment" :index="i" :path="id"/>
       </ul>
-<!--      not working above-->
     </section>
   </div>
 </template>
 
 <script>
-
-    //v-model in on textarea auto updating paragraph
-    //either remove model or reverse changes on cancel press
-
     import { db } from '@/firebase';
     import IndividualComment from "@/components/IndividualComment";
     import CryptoJS from "crypto-js";
@@ -64,16 +57,9 @@
       },
 
       created() {
-
-
-        // let commentList = [];
-
-        //slim chance was incidentally uncommented
         db.collection('posts').doc(this.$route.params.id).collection('comments').onSnapshot(snapshot => {
           let commentList = [];
           let decryptionKey;
-          // console.log(snapshot.getValue());
-
           db.collection('Encryption Key').doc('pe9izlV1les8NQ3SsDad').get().then((doc) => {
 
             decryptionKey = doc.data().Key;
@@ -87,24 +73,11 @@
 
               let comment = CryptoJS.AES.decrypt(doc.data().Comment, decryptionKey).toString(CryptoJS.enc.Utf8);
               let author = CryptoJS.AES.decrypt(doc.data().Author, decryptionKey).toString(CryptoJS.enc.Utf8);
-
-              // console.log(comment);
-              // console.log(author);
-              //
-              // comment = comment.toString(CryptoJS.enc.Utf8)
-              // author = author.toString(CryptoJS.enc.Utf8);
-
-
               commentList.push([comment, author, doc.id]);
             })
           })
-
-          // removed timeout of 0
           this.comments = commentList;
         })
-
-        // console.log(commentList);
-        // this.comments = commentList;
       },
 
       mounted() {
@@ -204,7 +177,6 @@
                   })
                 })
             }
-
         },
 
         addComment() {
@@ -239,10 +211,6 @@
           .catch((err) => {
             console.log(err);
           })
-
-            // db.collection('comments').add(() => {
-
-            // })
         }
       }
     }
@@ -252,20 +220,15 @@
 
     h1, .editTitle {
         margin: 5vw auto 3vw auto;
-        /* width: 90vw; */
         color: white;
         font-size: 2em;
 
         font-family: 'Roboto', sans-serif;
         font-weight: 400;
-        /*border: 1px solid #22223b;*/
-
         width: 1000px;
 
         white-space: pre-wrap;
         resize: none;
-
-        /*extra boder to prevent margin shift when changing to textarea visiblity */
     }
 
     p {
@@ -279,19 +242,13 @@
 
         padding: 16px;
         border: 1px solid white;
-        /*extra boder to prevent margin shift when changing to textarea visiblity */
+        /*extra border to prevent margin shift when changing to textarea visibility */
     }
 
     .editTitle {
-
-        /*margin: 5vw auto 3vw auto;*/
-
         background: none;
         display: block;
         outline: none;
-
-        /* color: white;
-        font-size: 2em; */
     }
 
     .editInput {
@@ -299,14 +256,11 @@
         margin: -37px auto 10px auto;
         background: none;
         outline: none;
-        /* border: none; */
         color: white;
         font-size: 1.2em;
 
-        /* width: 90vw; */
         white-space: pre-wrap;
         resize: none;
-
         font-family: 'Open Sans', sans-serif;
     }
 
@@ -328,14 +282,12 @@
         resize: none;
 
         width: 400px;
-        /* white-space: pre-wrap; */
 
         background: none;
         color: white;
         font-size: 1.2em;
 
         height: 1.4em;
-        /* border: none; */
         outline: none;
     }
 
@@ -350,15 +302,6 @@
     .commentInputSection button:hover {
         background: rgb(49, 49, 49);
     }
-
-    /*.commentsSection {*/
-    /*  width: 2000px;*/
-    /*}*/
-
-
-    /* .commentInputSection textarea::placeholder {
-        color: grey;
-    } */
 
     button {
         text-align: center;
@@ -381,7 +324,6 @@
         }
 
         h1, p, article .editInput {
-          /*margin: 0 auto;*/
           width: 1000px;
         }
 
@@ -393,5 +335,4 @@
             margin-left: 570px;
         }
     }
-
 </style>

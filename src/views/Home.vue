@@ -52,15 +52,10 @@
     position: absolute;
     right: 0;
     bottom: 0;
-    /*width: 100%;*/
-    /*height: 100%;*/
   }
 
   h1 {
-    /*margin-bottom: 3em;*/
     font-size: 3em;
-    /*margin-top: 5vw;*/
-    /*text-align: center;*/
     margin: 5vw auto 0 20vw;
     color: white;
   }
@@ -69,7 +64,6 @@
     font-size: 2em;
     color: white;
     margin: 5vw auto 0 20vw;
-    /*text-align: center;*/
   }
 
   .loginLink {
@@ -79,7 +73,6 @@
     height: 1.4vw;
     display: block;
     margin: 5vw auto 0 20vw;
-    /*text-align: center;*/
     text-decoration: none;
   }
 

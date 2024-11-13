@@ -1,27 +1,21 @@
 <template>
   <div class="wrapper">
     <section></section>
-    <!-- <Header /> -->
     <PostSection :posts="postsData" :user='user' v-on:updatePost='updatePosts' />
-    <!-- <AddPost v-on:updatePost='updatePosts' :user='user'/> -->
     <section></section>
   </div>
 </template>
 
 <script>
 import PostSection from '../components/PostSection.vue';
-// import AddPost from '../components/AddPost.vue'
 
 import { db } from '@/firebase';
 import {sha256} from "js-sha256";
 var CryptoJS = require("crypto-js");
 
-// const documentPath = 'posts/giA7TxfrlsdtXVphCNtb';
-
 export default {
   name: 'Posts',
   components: {
-    // Header,
     PostSection,
   },
 
@@ -31,7 +25,6 @@ export default {
 
   data() {
     return {
-      // firebaseData: null,
       postsData: [],
     };
   },
@@ -51,7 +44,7 @@ export default {
 
       console.log("DK2: " + decryptionKey);
 
-      console.log(decryptionKey); //grabs encryption key
+      console.log(decryptionKey);
     }).then(() => {
       db.collection('posts').get().then(querySnapshot => {
         querySnapshot.forEach(doc => {
@@ -73,13 +66,11 @@ export default {
   },
 
   methods: {
-    updatePosts() { //sometimes called too early*
+    updatePosts() {
       db.collection('posts').get().then(querySnapshot => {
 
 
         let decryptionkey;
-        // let crypt;
-        // let productKey;
 
         db.collection('Encryption Key').doc('pe9izlV1les8NQ3SsDad').get().then((doc) => {
           console.log("---------- DATA -----------");
@@ -92,7 +83,7 @@ export default {
 
           console.log("DK2: " + decryptionkey);
 
-          console.log(decryptionkey); //grabs encryption key
+          console.log(decryptionkey);
         }).then(() => {
           this.postsData = [];
           querySnapshot.forEach(doc => {
@@ -103,7 +94,6 @@ export default {
               'postText': doc.data().PostText
             }
 
-            // //two lines below may be unnessesary
             data.title = CryptoJS.AES.decrypt(data.title.toString(), decryptionkey).toString(CryptoJS.enc.Utf8);
             data.postText = CryptoJS.AES.decrypt(data.postText.toString(), decryptionkey).toString(CryptoJS.enc.Utf8);
 
@@ -117,10 +107,7 @@ export default {
   }
 }
 </script>
-
-
 <style scoped>
-
   .wrapper {
     display: flex;
     justify-content: space-around;
@@ -132,21 +119,4 @@ export default {
     height: 80vh;
     background: rgb(29,28,33);
   }
-
-  /* *{
-    list-style: none;
-  }
-
-  body{
-    background: rgb(46, 62, 80);
-  } */
-
-/* #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-} */
 </style>

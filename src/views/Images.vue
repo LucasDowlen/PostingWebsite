@@ -3,16 +3,7 @@
     <div> Collection of Images Posted </div>
 
     <div ref="grid">
-
           <img v-for="image in imagesToPreload" v-bind:key="image" :src=image />
-
-<!--      <img src="https://imgs.search.brave.com/SPCXBWlnYTK2ygGCIAcL3FsfVI-qIQqAY_BDP4YU-fs/rs:fit:448:336:1/g:ce/aHR0cDovLzIuYnAu/YmxvZ3Nwb3QuY29t/L184SDBrZW4zd3d0/RS9UTFJRN0ZSZl9v/SS9BQUFBQUFBQVY3/US9HZEw4Z19kUk1X/US9zMTYwMC9Db29s/X0Rlc2t0b3BfV2Fs/bHBhcGVyc19JbWFn/ZXMzLmpwZw">-->
-<!--      <img src="https://imgs.search.brave.com/LEXrBpwM34YF5faailaUS2v3vHsAvuNOuW-xGlZ7h6k/rs:fit:425:425:1/g:ce/aHR0cDovL2ltYWdl/cy5hbGwtZnJlZS1k/b3dubG9hZC5jb20v/aW1hZ2VzL2dyYXBo/aWNsYXJnZS9jb29s/X3BpY3R1cmVzX29m/X2VhcnRoXzNfMTY1/NTE0LmpwZw">-->
-<!--      <img src="https://imgs.search.brave.com/0EoauFDLhxVl-mIvF_RC6Z8bXoiwpt4HIy239_13psM/rs:fit:450:338:1/g:ce/aHR0cHM6Ly9ibHVl/YmxvdHMuY29tL3dw/LWNvbnRlbnQvdXBs/b2Fkcy8yMDA5LzA3/L3NwYWNlOC5qcGc">-->
-<!--      <img src="https://imgs.search.brave.com/AppKJea4mMaA6_WhVr3I4_YeM9wfm1kDiU6eheuLW8Q/rs:fit:1200:1200:1/g:ce/aHR0cHM6Ly93YWxs/cGFwZXJjYXZlLmNv/bS93cC93cDYxMjQy/MDguanBn">-->
-<!--      <img src="https://imgs.search.brave.com/h76vkcTGN7cjcDstWdD-NrxPZhitHLfsaIHyJ0PgtEw/rs:fit:1200:1024:1/g:ce/aHR0cDovL3d3dy5w/aWNzaHVuZ2VyLmNv/bS93cC1jb250ZW50/L3VwbG9hZHMvMjAx/NC8wNC85MTEuanBn">-->
-<!--      <img src="https://imgs.search.brave.com/sk8_L2PiKrdU6unxesv2h8VXrS9d3-W8DBdPLYp5E7Q/rs:fit:1200:1200:1/g:ce/aHR0cDovL3d3dy5w/aWNzaHVuZ2VyLmNv/bS93cC1jb250ZW50/L3VwbG9hZHMvMjAx/NC8wNC84OC5qcGc">-->
-<!--      <img src="https://ichef.bbci.co.uk/news/976/cpsprodpb/15951/production/_117310488_16.jpg">-->
     </div>
   </div>
 </template>
@@ -22,14 +13,6 @@
 <script>
 
   import Masonry from 'masonry-layout';
-
-  // var imagesToPreload = ["https://imgs.search.brave.com/SPCXBWlnYTK2ygGCIAcL3FsfVI-qIQqAY_BDP4YU-fs/rs:fit:448:336:1/g:ce/aHR0cDovLzIuYnAu/YmxvZ3Nwb3QuY29t/L184SDBrZW4zd3d0/RS9UTFJRN0ZSZl9v/SS9BQUFBQUFBQVY3/US9HZEw4Z19kUk1X/US9zMTYwMC9Db29s/X0Rlc2t0b3BfV2Fs/bHBhcGVyc19JbWFn/ZXMzLmpwZw",
-  // "https://imgs.search.brave.com/LEXrBpwM34YF5faailaUS2v3vHsAvuNOuW-xGlZ7h6k/rs:fit:425:425:1/g:ce/aHR0cDovL2ltYWdl/cy5hbGwtZnJlZS1k/b3dubG9hZC5jb20v/aW1hZ2VzL2dyYXBo/aWNsYXJnZS9jb29s/X3BpY3R1cmVzX29m/X2VhcnRoXzNfMTY1/NTE0LmpwZw",
-  //   "https://imgs.search.brave.com/0EoauFDLhxVl-mIvF_RC6Z8bXoiwpt4HIy239_13psM/rs:fit:450:338:1/g:ce/aHR0cHM6Ly9ibHVl/YmxvdHMuY29tL3dw/LWNvbnRlbnQvdXBs/b2Fkcy8yMDA5LzA3/L3NwYWNlOC5qcGc"];
-
-  // console.log("Masonry:");
-  // const masonry = new Masonry(this.$refs.grid);
-  // console.log(masonry);
 
   export default {
     name: "Images",
@@ -54,7 +37,7 @@
       const images = this.imagesToPreload.map(imageSrc => {
         return new Promise((resolve, reject) => {
           const img = new Image();
-          img.src = imageSrc; //make this run masonry even if bad image is loaded.
+          img.src = imageSrc;
           img.onload = resolve;
           img.onerror = reject;
         });
@@ -75,18 +58,7 @@
   }
 
 </script>
-
 <style scoped>
-
-  /*.wrapper {*/
-  /*  !*width: 100%;*!*/
-  /*  !*background: blue;*!*/
-  /*  */
-  /*  !*display: flex;*!*/
-  /*  */
-  /*  !*align-content: center;*!*/
-  /*}*/
-
   .wrapper  div{
     margin: 5vh auto;
     font-size: 2em;
@@ -98,5 +70,4 @@
   img {
     width: 400px;
   }
-
 </style>
