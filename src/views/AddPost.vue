@@ -3,7 +3,7 @@
 
         <section>
           <h1>Create a Post Under /General</h1>
-          <h3>You can create a post here. You must include a title and content.</h3>
+          <h3 :style="{ color: this.errColor }"> {{ this.errMessage }} </h3>
         </section>
 
         <form>
@@ -32,12 +32,11 @@
         data() {
             return {
                 data: {
-                    // ID: "",
                     Title: "",
-                    // Author: "",
-                    PostText: "",
-                    // test: ""
-                }
+                    PostText: ""
+                },
+                errMessage: "You can create a post here. You must include a title and content.",
+                errColor: "white"
             }
         },
 
@@ -45,7 +44,20 @@
             callUpdateFunction() {
 
                 if(this.data.Title === '' || this.user === '' || this.data.PostText === '' || !firebase.auth().currentUser.emailVerified){
-                    console.log("Unfilled Fields");
+                    this.errColor = "#e73952";
+                    if(this.user === '') {
+                      console.log("Please Login");
+                      this.errMessage = "Please Login";
+                      console.log(this.errMessage)
+                    }
+                    else if (!firebase.auth().currentUser.emailVerified) {
+                      console.log("Please Verify your Email Address");
+                      this.errMessage = "Please Verify your Email Address";
+                    }
+                    else {
+                      console.log("Please Provide a valid Title and Post");
+                      this.errMessage = "Please Provide a valid Title and Post";
+                    }
                     return;
                 }
 
@@ -66,14 +78,17 @@
                   db.collection("posts").add({
                     Title: encryptedTitle,
                     Username: this.user,
-                    PostText: encryptedPostText
+                    PostText: encryptedPostText,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp() //new
                   })
-                      .then(() => {
-                        this.$router.push({ path: '/posts' })
-                      });
-
-                  this.data.Title = "";
-                  this.data.PostText = "";
+                  .then(() => {
+                    this.$router.push({ path: '/posts' })
+                    this.data.Title = "";
+                    this.data.PostText = "";
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  });
                 });
             },
 

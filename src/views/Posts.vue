@@ -32,7 +32,6 @@ export default {
   created() {
 
     let decryptionKey;
-
     db.collection('Encryption Key').doc('pe9izlV1les8NQ3SsDad').get().then((doc) => {
       console.log("---------- DATA -----------");
 
@@ -46,7 +45,7 @@ export default {
 
       console.log(decryptionKey);
     }).then(() => {
-      db.collection('posts').get().then(querySnapshot => {
+      db.collection('posts').orderBy('createdAt', 'desc').get().then(querySnapshot => {
         querySnapshot.forEach(doc => {
           const data = {
             'id': doc.id,
@@ -67,11 +66,8 @@ export default {
 
   methods: {
     updatePosts() {
-      db.collection('posts').get().then(querySnapshot => {
-
-
+      db.collection('posts').orderBy('createdAt', 'desc').get().then(querySnapshot => {
         let decryptionkey;
-
         db.collection('Encryption Key').doc('pe9izlV1les8NQ3SsDad').get().then((doc) => {
           console.log("---------- DATA -----------");
 
@@ -96,7 +92,6 @@ export default {
 
             data.title = CryptoJS.AES.decrypt(data.title.toString(), decryptionkey).toString(CryptoJS.enc.Utf8);
             data.postText = CryptoJS.AES.decrypt(data.postText.toString(), decryptionkey).toString(CryptoJS.enc.Utf8);
-
             this.postsData.push(data);
           })})
       })

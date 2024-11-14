@@ -32,6 +32,8 @@
 
 <script>
     import { db } from '@/firebase';
+    import firebase from 'firebase/app'; //new
+    import 'firebase/firestore'; //new
     import IndividualComment from "@/components/IndividualComment";
     import CryptoJS from "crypto-js";
     import {sha256} from "js-sha256";
@@ -57,7 +59,7 @@
       },
 
       created() {
-        db.collection('posts').doc(this.$route.params.id).collection('comments').onSnapshot(snapshot => {
+        db.collection('posts').doc(this.$route.params.id).collection('comments').orderBy('createdAt', 'desc').onSnapshot(snapshot => {
           let commentList = [];
           let decryptionKey;
           db.collection('Encryption Key').doc('pe9izlV1les8NQ3SsDad').get().then((doc) => {
@@ -83,7 +85,6 @@
       mounted() {
 
         let decryptionKey;
-
         db.collection('Encryption Key').doc('pe9izlV1les8NQ3SsDad').get().then((doc) => {
 
           decryptionKey = doc.data().Key;
@@ -105,7 +106,7 @@
         })}).then(() => {
             this.editing = false;
         }).then(() => {
-          this.comments = db.collection("posts").doc(this.$route.params.id).collection("comments").get().then(querySnapshot => {
+          this.comments = db.collection("posts").doc(this.$route.params.id).collection("comments").orderBy('createdAt', 'desc').get().then(querySnapshot => {
 
             let newList = [];
 
@@ -143,19 +144,13 @@
             if(editing) {
                 this.editPostTitle = this.postTitle;
                 this.editPostText = this.postText;
-
                 this.editing = true;
-
                 this.$refs.postInput.style.height = this.$refs.postInput.parentElement.scrollHeight - 80 + "px"; //maybe tweak subtracted  variable
             }
 
             else {
-
                 this.editing = false;
-
                 if(this.postTitle === this.editPostTitle && this.postText === this.editPostText) return; //prevents unnecessary updates to database
-
-
                 let decryptionKey;
 
                 db.collection('Encryption Key').doc('pe9izlV1les8NQ3SsDad').get().then((doc) => {
@@ -197,7 +192,8 @@
 
             db.collection('posts').doc(this.$route.params.id).collection('comments').add({
               Comment: comment,
-              Author: user
+              Author: user,
+              createdAt: firebase.firestore.FieldValue.serverTimestamp() //new
             })
           }).then(() => {
             db.collection("users").doc(this.user).collection('userComments').add({
